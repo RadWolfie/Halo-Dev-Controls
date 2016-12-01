@@ -17,9 +17,9 @@
 *********************************************************************************
 	File:    RWMemory.cpp
 	Project: Read Write Memory Tools
-	Author:  Jesus7Freak
-	Date:    10/29/2011
-	Version: 2.30
+	Author:  Jesus7Freak, RadWolfie
+	Date:    10/30/2016
+	Version: 2.41
 *********************************************************************************/
 //uses both ASCII and UNICODE functions
 #ifdef UNICODE
@@ -64,6 +64,28 @@ namespace ReadWriteMemoryTools
          }while(_char1 && _char2);
       }
       return match;
+   }
+
+   //RadWolfie - Neccesary requirement for case insensitive files check.
+   bool str_icmpA(const char *str1, const char *str2) {
+       bool noMatch = false;
+       //compare until null terminator
+       unsigned char _char1, _char2;
+       do {//compare the null terminator as well
+           _char1 = *str1++;
+           if ((unsigned)(_char1 - 'A') <= 'Z' - 'A')
+               _char1 += 'a' - 'A';
+
+           _char2 = *str2++;
+           if ((unsigned)(_char2 - 'A') <= 'Z' - 'A')
+               _char2 += 'a' - 'A';
+
+           if (_char1 != _char2) {
+               noMatch = true;
+               break;
+           }
+       } while (_char1 && _char2);
+       return !noMatch;
    }
 
    bool str_cmpW(wchar_t *str1, wchar_t *str2, int length)
@@ -456,7 +478,7 @@ namespace ReadWriteMemoryTools
       DWORD me32_list_size = me32_list.size();
       for (unsigned int me32_i = 0; me32_i < me32_list_size; me32_i++)
       {
-         if (str_cmpA(module_name, me32_list[me32_i].szModule))
+         if (str_icmpA(module_name, me32_list[me32_i].szModule))
          {
             module = me32_list[me32_i];
             break;

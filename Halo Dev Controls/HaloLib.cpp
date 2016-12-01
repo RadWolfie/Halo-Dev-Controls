@@ -17,8 +17,8 @@
 *********************************************************************************
 	File:    HaloLib.cpp
 	Project: Halo Dev Controls and HDC
-	Author:  Jesus7Freak
-	Date:    11/22/2011
+	Author:  Jesus7Freak, RadWolfie
+	Date:    11/30/2016
 	Game:    Halo and Halo Custom Edition
 	Version: all
 *********************************************************************************/
@@ -30,7 +30,8 @@
 namespace HaloCE_lib
 {
    ADDRESS_SIG Current_map_addr_sig =
-   { "\x7F\x1F\xB8\x00\x00\x00\x00\x8D\x50", "x?x????xx", 3 };
+   //{ "\x7F\x1F\xB8\x00\x00\x00\x00\x8D\x50", "x?x????xx", 3 }; //Does not work for 1.10 version
+   { "\xB8\x64\x30\x64\x00\x8D\x50\x01\x8A\x08\x40\x84\xC9\x75\xF9\x2B\xC2\x83\xF8\x1F", "x????x??xxxxxx?x?xxx", 1 };
        
    ADDRESS_SIG Rider_Eject_addr_sig =
    { "\x04\xA0\xAC\x49\x62\x00\x84\xC0\x0F\x84\x00\x00\x00\x00\x8B\x4D\xEC", "xx????xxxx????xxx", 2 };

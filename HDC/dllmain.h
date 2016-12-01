@@ -17,8 +17,8 @@
 *********************************************************************************
 	File:    dllmain.h
 	Project: HDC
-	Author:  Jesus7Freak
-	Date:    11/22/2011
+	Author:  Jesus7Freak, RadWolfie
+	Date:    11/30/2016
 	Game:    Halo and Halo Custom Edition
 	Version: all
 *********************************************************************************/
@@ -28,9 +28,9 @@
 #pragma comment(lib, "libcpmt.lib")
 #pragma comment(lib, "LIBCMT.lib")
 
-#include "HaloLib.h"
-#include "cmds.h"
-#include "tele_loc_resources.h"
+#include "../Halo Dev Controls/HaloLib.h"
+#include "../Halo Dev Controls/cmds.h"
+#include "../Halo Dev Controls/tele_loc_resources.h"
 
 using namespace ReadWriteMemoryTools;
 
