@@ -1,0 +1,627 @@
+;notes by Jesus7Freak
+;haloce1.09 p0 rpg_beta6_2 rp_h1
+;console 004C9BE3
+
+Call to haloce.00487150 
+
+ 00487283   51               PUSH ECX
+ 00487284   55               PUSH EBP
+ 00487285   E8 96100000      CALL haloce.00488320
+ 0048728A   83C4 0C          ADD ESP,0C
+ 0048728D   83F8 FF          CMP EAX,-1
+ 
+  
+004890BC   56               |PUSH ESI ;ESI=0018CEC0 ptr to "rp_h1)"
+004890BD   E8 3EFEFFFF      |CALL haloce.00488F00
+->
+ 00488F00   55               PUSH EBP
+ 00488F01   8B2D B4558100    MOV EBP,DWORD PTR DS:[8155B4];script node->EBP=40488908
+ 00488F07   56               PUSH ESI ;ESI=0018CEC0 ptr to "rp_h1)"
+ 00488F08   57               PUSH EDI ;EDI=4048895C (from script node?)
+ 
+ 00488F09   8BD5             MOV EDX,EBP ;script node
+ 00488F0B   E8 B0AA0400      CALL haloce.004D39C0
+ ->
+  ;add data header obj <script node>
+  004D39C0   0FBF4A 22        MOVSX ECX,WORD PTR DS:[EDX+22];script node->ItemSize ECX=00000014
+  004D39C4   53               PUSH EBX; save 
+  004D39C5   66:8B5A 2C       MOV BX,WORD PTR DS:[EDX+2C];script node->InMainMenu?? BX=0002
+  004D39C9   55               PUSH EBP;save
+  004D39CA   8B6A 34          MOV EBP,DWORD PTR DS:[EDX+34];script node->ItemArray_ptr EBP=40488940
+  004D39CD   56               PUSH ESI;save
+  004D39CE   0FBFF3           MOVSX ESI,BX;->ESI=00000002
+  004D39D1   0FAFF1           IMUL ESI,ECX;->ESI=00000028
+  004D39D4   83C8 FF          OR EAX,FFFFFFFF;->EAX=FFFFFFFF
+  004D39D7   03F5             ADD ESI,EBP;script node object->ESI=40488968
+  004D39D9   66:3B5A 20       CMP BX,WORD PTR DS:[EDX+20];BX=0002 =< script node->MaxItems
+  004D39DD   7D 60            JGE SHORT haloce.004D3A3F
+  004D39DF   90               NOP ;from a patch?
+  004D39E0   66:833E 00       /CMP WORD PTR DS:[ESI],0;valid ID?->
+  004D39E4   74 0D            |JE SHORT haloce.004D39F3
+  ...
+  004D39F3   8BE9             MOV EBP,ECX;->EBP=00000014
+  004D39F5   C1E9 02          SHR ECX,2;->ECX=00000005
+  004D39F8   57               PUSH EDI;save
+  004D39F9   33C0             XOR EAX,EAX;set to 0
+  004D39FB   8BFE             MOV EDI,ESI;script node object->EDI=40488968
+  004D39FD   F3:AB            REP STOS DWORD PTR ES:[EDI];stores stuff->EDI=4048897C ECX=0
+  004D39FF   8BCD             MOV ECX,EBP
+  004D3A01   83E1 03          AND ECX,3
+  004D3A04   F3:AA            REP STOS BYTE PTR ES:[EDI];store 
+  004D3A06   66:8B42 32       MOV AX,WORD PTR DS:[EDX+32];script node->NextItemID AX=F2A8
+  004D3A0A   66:8906          MOV WORD PTR DS:[ESI],AX;store in script node object
+  004D3A0D   66:FF42 32       INC WORD PTR DS:[EDX+32]; increment NextItemID
+  004D3A11   66:837A 32 00    CMP WORD PTR DS:[EDX+32],0 ;valid test
+  004D3A16   5F               POP EDI
+  004D3A17   75 06            JNZ SHORT haloce.004D3A1F 
+  ...
+  ;004D3A19   66:C742 32 0080  MOV WORD PTR DS:[EDX+32],8000
+  ...
+  004D3A1F   66:FF42 30       INC WORD PTR DS:[EDX+30]; increment NextItemIndex
+  004D3A23   66:395A 2E       CMP WORD PTR DS:[EDX+2E],BX;BX=0002 == 0F33
+  004D3A27   8D43 01          LEA EAX,DWORD PTR DS:[EBX+1];->EAX=404E0003
+  004D3A2A   66:8942 2C       MOV WORD PTR DS:[EDX+2C],AX;script node->InMainMenu?=0003
+  004D3A2E   7F 04            JG SHORT haloce.004D3A34
+  ...
+  ;004D3A30   66:8942 2E       MOV WORD PTR DS:[EDX+2E],AX
+  ...
+  004D3A34   0FBF06           MOVSX EAX,WORD PTR DS:[ESI];->EAX=FFFF F2A8 part ID
+  004D3A37   0FBFCB           MOVSX ECX,BX;->ECX=0000 0002 part index
+  004D3A3A   C1E0 10          SHL EAX,10;->EAX=F2A80000
+  004D3A3D   0BC1             OR EAX,ECX;combine index and ID->EAX=F2A80002 script node tag
+  004D3A3F   5E               POP ESI;restore
+  004D3A40   5D               POP EBP;restore
+  004D3A41   5B               POP EBX;restore
+  004D3A42   C3               RETN
+  <-
+ 00488F10   8BF8             MOV EDI,EAX;->EDI=F2A80002 script node tag
+ 00488F12   83CE FF          OR ESI,FFFFFFFF
+ 00488F15   3BFE             CMP EDI,ESI;test valid tag
+ 00488F17   74 5B            JE SHORT haloce.00488F74
+
+
+
+;cheat engine on access:
+;function 00542310
+00542340 - 8A 19  - mov bl,[ecx]
+0054234C - 8A 59 01  - mov bl,[ecx+01]
+;(x+x*8)*4 or 24h(36)+ veh name list pointer
+;[[6E226C]+208] = veh name list pointer
+;[[6E226C]+204] = num of veh names
+
+0048A035   8B3D 6C226E00    MOV EDI,DWORD PTR DS:[6E226C]
+0048A03B   03C5             ADD EAX,EBP
+0048A03D   50               PUSH EAX
+0048A03E   8BCF             MOV ECX,EDI
+0048A040   32DB             XOR BL,BL
+0048A042   E8 C9820B00      CALL haloce.00542310
+->
+00542310   8B81 04020000    MOV EAX,DWORD PTR DS:[ECX+204];->EAX=0000007B
+00542316   53               PUSH EBX;save
+00542317   55               PUSH EBP;save
+00542318   56               PUSH ESI;save
+00542319   57               PUSH EDI;save
+0054231A   33FF             XOR EDI,EDI;set EDI to 0
+0054231C   85C0             TEST EAX,EAX
+0054231E   7E 55            JLE SHORT haloce.00542375
+00542320   8BA9 08020000    MOV EBP,DWORD PTR DS:[ECX+208];->EBP=4047AA80 first veh name "p2_x"
+00542326   33C9             XOR ECX,ECX;set ECX to 0
+00542328   EB 06            JMP SHORT haloce.00542330
+...
+;0054232A   8D9B 00000000    LEA EBX,DWORD PTR DS:[EBX]
+...
+00542330   8B7424 14        /MOV ESI,DWORD PTR SS:[ESP+14];the veh name we're looking for->ESI=404E5CF5 "rp_h1"
+00542334   8D0CC9           |LEA ECX,DWORD PTR DS:[ECX+ECX*8];ECX=0
+00542337   8D4C8D 00        |LEA ECX,DWORD PTR SS:[EBP+ECX*4];->ECX=4047AA80 "p2_x"
+0054233B   EB 03            |JMP SHORT haloce.00542340
+...
+;0054233D   8D49 00          |LEA ECX,DWORD PTR DS:[ECX]
+...
+00542340   8A19             |/MOV BL,BYTE PTR DS:[ECX];first letter->BL=70 'p'
+00542342   8AD3             ||MOV DL,BL;copy->DL=70 'p'
+00542344   3A1E             ||CMP BL,BYTE PTR DS:[ESI] ;'p' == 'r'
+00542346   75 1C            ||JNZ SHORT haloce.00542364
+...
+;00542346   75 1C            ||JNZ SHORT haloce.00542364
+;00542348   84D2             ||TEST DL,DL
+;0054234A   74 14            ||JE SHORT haloce.00542360
+;0054234C   8A59 01          ||MOV BL,BYTE PTR DS:[ECX+1]
+;0054234F   8AD3             ||MOV DL,BL
+;00542351   3A5E 01          ||CMP BL,BYTE PTR DS:[ESI+1]
+;00542354   75 0E            ||JNZ SHORT haloce.00542364
+;00542356   83C1 02          ||ADD ECX,2
+;00542359   83C6 02          ||ADD ESI,2
+;0054235C   84D2             ||TEST DL,DL
+;0054235E  ^75 E0            |\JNZ SHORT haloce.00542340
+;00542360   33C9             |XOR ECX,ECX
+;00542362   EB 05            |JMP SHORT haloce.00542369
+...
+00542364   1BC9             |SBB ECX,ECX;->ECX=FFFFFFFF
+00542366   83D9 FF          |SBB ECX,-1
+00542369   85C9             |TEST ECX,ECX
+0054236B   74 11            |JE SHORT haloce.0054237E
+0054236D   47               |INC EDI;->00000001
+0054236E   0FBFCF           |MOVSX ECX,DI;->ECX=00000001
+00542371   3BC8             |CMP ECX,EAX;ECX=00000001 == EAX=0000007B (EAX = num of global scripted vehs?)
+00542373  ^7C BB            \JL SHORT haloce.00542330
+...
+;not found
+00542375   5F               POP EDI
+00542376   5E               POP ESI
+00542377   5D               POP EBP
+00542378   66:0D FFFF       OR AX,0FFFF
+0054237C   5B               POP EBX
+0054237D   C3               RETN
+...
+;once found
+0054237E   66:8BC7          MOV AX,DI;AX->00000009 index of veh name
+00542381   5F               POP EDI
+00542382   5E               POP ESI
+00542383   5D               POP EBP
+00542384   5B               POP EBX
+00542385   C3               RETN
+<-
+0048A047   83C4 04          ADD ESP,4
+0048A04A   66:3D FFFF       CMP AX,0FFFF
+0048A04E   74 65            JE SHORT haloce.0048A0B5
+0048A050   8BBF 08020000    MOV EDI,DWORD PTR DS:[EDI+208];ptr to first veh
+0048A056   0FBF56 04        MOVSX EDX,WORD PTR DS:[ESI+4];ESI script node object+4->EDX=0000002B
+0048A05A   0FBFC8           MOVSX ECX,AX;->ECX=00000009
+0048A05D   8D0CC9           LEA ECX,DWORD PTR DS:[ECX+ECX*8];9+9*8->ECX=00000051
+0048A060   8A4C8F 20        MOV CL,BYTE PTR DS:[EDI+ECX*4+20];script node object+veh name index offset+20->CL=00000001
+0048A064   BD 01000000      MOV EBP,1;->EBP=00000001
+0048A069   D3E5             SHL EBP,CL;->EBP=00000002
+0048A06B   0FBF0C55 F2595F00   MOVSX ECX,WORD PTR DS:[EDX*2+5F59F2];->ECX=FFFFFFFF
+0048A073   85E9             TEST ECX,EBP
+0048A075   74 0B            JE SHORT haloce.0048A082
+0048A077   5F                  POP EDI                                  ; haloce.005FD3F5
+0048A078   66:8946 10          MOV WORD PTR DS:[ESI+10],AX;save veh name index in script node object
+0048A07C   5E                  POP ESI
+0048A07D   5D                  POP EBP
+0048A07E   B0 01               MOV AL,1;found it
+0048A080   5B                  POP EBX
+0048A081   C3                  RETN
+<-
+0048A12B   66:8343 04 FA       ADD WORD PTR DS:[EBX+4],0FFFA;[EBX=40488968+4]=4048896C=002B->0025
+0048A130   83C4 04             ADD ESP,4
+0048A133   5F                  POP EDI
+0048A134   5E                  POP ESI
+0048A135   5D                  POP EBP
+0048A136   5B                  POP EBX
+0048A137   C3                  RETN
+<-
+00489305   83C4 04             ADD ESP,4
+00489308   5E                  POP ESI
+00489309   C3                  RETN
+<-
+00489244   5F                  POP EDI
+00489245   5E                  POP ESI
+00489246   C3                  RETN
+<-
+0048A283   83C4 08             ADD ESP,8
+0048A286   84C0                TEST AL,AL
+0048A288   74 19               JE SHORT haloce.0048A2A3
+0048A28A   8B0D B4558100       MOV ECX,DWORD PTR DS:[8155B4];script node->ECX=40488908
+0048A290   8B51 34             MOV EDX,DWORD PTR DS:[ECX+34];script node first header obj->EDX=40488940
+0048A293   8BC7                MOV EAX,EDI->;EAX=F2B20002
+0048A295   25 FFFF0000         AND EAX,0FFFF;EAX=00000002
+0048A29A   8D0480              LEA EAX,DWORD PTR DS:[EAX+EAX*4];->EAX=0000000A
+0048A29D   8B7C82 08           MOV EDI,DWORD PTR DS:[EDX+EAX*4+8];script node header obj->obj? EDI=FFFFFFFF
+0048A2A1   EB 05               JMP SHORT haloce.0048A2A8
+...
+;0048A2A3   C64424 13 00        MOV BYTE PTR SS:[ESP+13],0
+...
+0048A2A8   8A4424 13           MOV AL,BYTE PTR SS:[ESP+13];->AL=01
+0048A2AC   45                  INC EBP;->EBP=00000001
+0048A2AD   84C0                TEST AL,AL
+0048A2AF  ^75 B2               JNZ SHORT haloce.0048A263
+...
+;more stuff then ret
+<-
+00489780   83C4 08             ADD ESP,8
+00489783   5F                  POP EDI
+00489784   5E                  POP ESI
+00489785   5D                  POP EBP
+00489786   884424 07           MOV BYTE PTR SS:[ESP+7],AL;AL=01
+0048978A   5B                  POP EBX
+0048978B   83C4 08             ADD ESP,8
+0048978E   C3                  RETN
+<-
+0048924D   83C4 04             ADD ESP,4
+00489250   5F                  POP EDI
+00489251   5E                  POP ESI
+00489252   C3                  RETN
+<-
+00488201   83C4 08             ADD ESP,8
+00488204   84C0                TEST AL,AL
+00488206   74 05               JE SHORT haloce.0048820D
+00488208   B0 01               MOV AL,1
+0048820A   5E                  POP ESI
+0048820B   59                  POP ECX
+0048820C   C3                  RETN
+<-
+00489780   83C4 08             ADD ESP,8
+00489783   5F                  POP EDI
+00489784   5E                  POP ESI
+00489785   5D                  POP EBP
+00489786   884424 07           MOV BYTE PTR SS:[ESP+7],AL
+0048978A   5B                  POP EBX
+0048978B   83C4 08             ADD ESP,8
+0048978E   C3                  RETN
+<-
+0048924D   83C4 04             ADD ESP,4 ;recursive function?
+00489250   5F                  POP EDI
+00489251   5E                  POP ESI
+00489252   C3                  RETN
+<-
+00488489   83C4 08             ADD ESP,8
+0048848C   84C0                TEST AL,AL
+0048848E   74 0A               JE SHORT haloce.0048849A
+00488490   5F                  POP EDI
+00488491   5E                  POP ESI
+00488492   5D                  POP EBP
+00488493   8BC3                MOV EAX,EBX
+00488495   5B                  POP EBX
+00488496   83C4 08             ADD ESP,8
+00488499   C3                  RETN
+<-
+0048728A   83C4 0C             ADD ESP,0C
+0048728D   83F8 FF             CMP EAX,-1;EAX=F2B30003
+00487290   74 10               JE SHORT haloce.004872A2
+00487292   50                  PUSH EAX
+00487293   C64424 17 01        MOV BYTE PTR SS:[ESP+17],1
+00487298   E8 035D0000         CALL haloce.0048CFA0
+->
+0048CFA0   A0 38C56400         MOV AL,BYTE PTR DS:[64C538];->AL=01
+0048CFA5   55                  PUSH EBP
+0048CFA6   8B6C24 08           MOV EBP,DWORD PTR SS:[ESP+8];first param->EBP=F2B30003
+0048CFAA   56                  PUSH ESI
+0048CFAB   83CE FF             OR ESI,FFFFFFFF;set ESI to -1
+0048CFAE   84C0                TEST AL,AL
+0048CFB0   74 65               JE SHORT haloce.0048D017
+0048CFB2   83FD FF             CMP EBP,-1
+0048CFB5   74 60               JE SHORT haloce.0048D017
+0048CFB7   57                  PUSH EDI;EDI=00000001
+0048CFB8   6A 02               PUSH 2
+0048CFBA   B8 FFFFFFFF         MOV EAX,-1;set EAX to -1
+0048CFBF   E8 7C000000         CALL haloce.0048D040
+->
+0048D040   8B15 B0558100       MOV EDX,DWORD PTR DS:[8155B0];hs thread->EDX=403D84C8
+0048D046   56                  PUSH ESI
+0048D047   8BF0                MOV ESI,EAX
+0048D049   E8 72690400         CALL haloce.004D39C0
+->
+;add data header obj <hs thread>
+<-;ret F375000A
+0048D04E   83F8 FF             CMP EAX,-1;EAX=F375000A
+0048D051   74 6A               JE SHORT haloce.0048D0BD
+0048D053   8BC8                MOV ECX,EAX;->ECX=F375000A
+0048D055   81E1 FFFF0000       AND ECX,0FFFF;->ECX=0000000A
+0048D05B   69C9 18020000       IMUL ECX,ECX,218;->ECX=000014F0
+0048D061   034A 34             ADD ECX,DWORD PTR DS:[EDX+34];EDX=403D84C8(hs thread) first obj->ECX=403D99F0
+0048D064   83FE FF             CMP ESI,-1
+0048D067   8D51 18             LEA EDX,DWORD PTR DS:[ECX+18];->EDX=403D9A08
+0048D06A   8951 10             MOV DWORD PTR DS:[ECX+10],EDX
+0048D06D   C702 00000000       MOV DWORD PTR DS:[EDX],0
+0048D073   8B51 10             MOV EDX,DWORD PTR DS:[ECX+10]
+0048D076   66:C742 0C 0000     MOV WORD PTR DS:[EDX+C],0
+0048D07C   8B51 10             MOV EDX,DWORD PTR DS:[ECX+10];EDX doesnt change
+0048D07F   C742 04 FFFFFFFF    MOV DWORD PTR DS:[EDX+4],-1
+0048D086   8A5424 08           MOV DL,BYTE PTR SS:[ESP+8];->DL=02
+0048D08A   8851 02             MOV BYTE PTR DS:[ECX+2],DL
+0048D08D   8971 04             MOV DWORD PTR DS:[ECX+4],ESI;ESI=FFFFFFFF
+0048D090   C641 03 00          MOV BYTE PTR DS:[ECX+3],0
+0048D094   74 20               JE SHORT haloce.0048D0B6
+...
+0048D0B6   C741 08 00000000    MOV DWORD PTR DS:[ECX+8],0
+0048D0BD   5E                  POP ESI
+0048D0BE   C3                  RETN
+<-
+0048CFC4   8BF8                MOV EDI,EAX;EAX=F375000A->EDI=F375000A
+0048CFC6   83C4 04             ADD ESP,4
+0048CFC9   83FF FF             CMP EDI,-1
+0048CFCC   74 43               JE SHORT haloce.0048D011
+0048CFCE   A1 B0558100         MOV EAX,DWORD PTR DS:[8155B0];hs thread->EAX=403D84C8
+0048CFD3   8B48 34             MOV ECX,DWORD PTR DS:[EAX+34];first obj
+0048CFD6   8BF7                MOV ESI,EDI
+0048CFD8   81E6 FFFF0000       AND ESI,0FFFF
+0048CFDE   69F6 18020000       IMUL ESI,ESI,218
+0048CFE4   03F1                ADD ESI,ECX;hs thread obj->ESI=403D99F0
+0048CFE6   53                  PUSH EBX
+0048CFE7   8D5E 14             LEA EBX,DWORD PTR DS:[ESI+14];EBX=403D9A04
+0048CFEA   8BC5                MOV EAX,EBP;->EAX=F2B30003 script node obj tag
+0048CFEC   8BD7                MOV EDX,EDI;->EDX=F375000A hs thread obj tag
+0048CFEE   E8 BD020000         CALL haloce.0048D2B0
+->
+0048D2B0   55                  PUSH EBP
+0048D2B1   8B2D B0558100       MOV EBP,DWORD PTR DS:[8155B0];hs thread
+0048D2B7   56                  PUSH ESI
+0048D2B8   8B35 B4558100       MOV ESI,DWORD PTR DS:[8155B4];script node
+0048D2BE   8B76 34             MOV ESI,DWORD PTR DS:[ESI+34]
+0048D2C1   81E2 FFFF0000       AND EDX,0FFFF
+0048D2C7   57                  PUSH EDI
+0048D2C8   69D2 18020000       IMUL EDX,EDX,218
+0048D2CE   8BF8                MOV EDI,EAX
+0048D2D0   8B45 34             MOV EAX,DWORD PTR SS:[EBP+34]
+0048D2D3   8BCF                MOV ECX,EDI
+0048D2D5   81E1 FFFF0000       AND ECX,0FFFF
+0048D2DB   8D0C89              LEA ECX,DWORD PTR DS:[ECX+ECX*4]
+0048D2DE   8D348E              LEA ESI,DWORD PTR DS:[ESI+ECX*4];script node obj->ESI=4048897C
+0048D2E1   8A4E 06             MOV CL,BYTE PTR DS:[ESI+6];->CL=00
+0048D2E4   03C2                ADD EAX,EDX;hs thread obj->EAX=403D99F0
+0048D2E6   F6C1 01             TEST CL,1
+0048D2E9   74 65               JE SHORT haloce.0048D350
+...
+0048D350   8B48 10             MOV ECX,DWORD PTR DS:[EAX+10];->ECX=403D9A08
+0048D353   8959 08             MOV DWORD PTR DS:[ECX+8],EBX;EBX=403D9A04
+0048D356   8B4D 34             MOV ECX,DWORD PTR SS:[EBP+34];->ECX=403D8500
+0048D359   03CA                ADD ECX,EDX;->ECX=403D99F0
+0048D35B   8B51 10             MOV EDX,DWORD PTR DS:[ECX+10];->EDX=403D9A08
+0048D35E   0FBF72 0C           MOVSX ESI,WORD PTR DS:[EDX+C];->ESI=00000000
+0048D362   8D7416 10           LEA ESI,DWORD PTR DS:[ESI+EDX+10];->ESI=403D9A18
+0048D366   8916                MOV DWORD PTR DS:[ESI],EDX
+0048D368   8971 10             MOV DWORD PTR DS:[ECX+10],ESI
+0048D36B   66:C746 0C 0000     MOV WORD PTR DS:[ESI+C],0
+0048D371   8A48 03             MOV CL,BYTE PTR DS:[EAX+3];->CL=00
+0048D374   8B50 10             MOV EDX,DWORD PTR DS:[EAX+10];->EDX=403D9A18
+0048D377   80C9 01             OR CL,1;->CL=01
+0048D37A   8848 03             MOV BYTE PTR DS:[EAX+3],CL
+0048D37D   897A 04             MOV DWORD PTR DS:[EDX+4],EDI;EDI=F2B30003
+0048D380   5F                  POP EDI
+0048D381   5E                  POP ESI
+0048D382   5D                  POP EBP
+0048D383   C3                  RETN
+<-
+0048CFF3   F646 03 01          TEST BYTE PTR DS:[ESI+3],1
+0048CFF7   74 11               JE SHORT haloce.0048D00A
+0048CFF9   57                  PUSH EDI;EDI=F375000A
+0048CFFA   E8 C1000000         CALL haloce.0048D0C0
+->
+0048D0C0   83EC 08             SUB ESP,8
+0048D0C3   8B15 B0558100       MOV EDX,DWORD PTR DS:[8155B0];hs thread
+0048D0C9   53                  PUSH EBX
+0048D0CA   55                  PUSH EBP
+0048D0CB   56                  PUSH ESI
+0048D0CC   8B72 34             MOV ESI,DWORD PTR DS:[EDX+34]
+0048D0CF   57                  PUSH EDI
+0048D0D0   8B7C24 1C           MOV EDI,DWORD PTR SS:[ESP+1C]
+0048D0D4   8BEF                MOV EBP,EDI
+0048D0D6   81E5 FFFF0000       AND EBP,0FFFF
+0048D0DC   69ED 18020000       IMUL EBP,EBP,218
+0048D0E2   8A442E 02           MOV AL,BYTE PTR DS:[ESI+EBP+2];hs thread header obj+2->AL=02
+0048D0E6   03F5                ADD ESI,EBP
+0048D0E8   33DB                XOR EBX,EBX
+0048D0EA   84C0                TEST AL,AL
+0048D0EC   895C24 10           MOV DWORD PTR SS:[ESP+10],EBX
+0048D0F0   66:893D 3AC56400    MOV WORD PTR DS:[64C53A],DI
+0048D0F7   75 16               JNZ SHORT haloce.0048D10F
+
+...;getting tired of following this...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;get object name?
+004890A2   8BD6             |MOV EDX,ESI
+004890A4   E8 87000000      |CALL haloce.00489130
+
+
+
+
+
+...1 ;inspect
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+...2 ;object_destroy
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5F60   haloce.0047D3D0
+...3 ;object_destroy
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5F60   haloce.0047D3D0
+...4 ;inspect
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+
+
+
+
+...2
+0048D1E0   51               PUSH ECX;ECX=403D9901
+0048D1E1   57               PUSH EDI;EDI=F373000A
+0048D1E2   50               PUSH EAX;EAX=00000027
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5F60   haloce.0047D3D0
+->
+0047D3D0   0FBF4424 04      MOVSX EAX,WORD PTR SS:[ESP+4];->EAX=00000027
+0047D3D5   8B0485 18416200  MOV EAX,DWORD PTR DS:[EAX*4+624118];->EAX=005F5F60
+0047D3DC   8B4C24 0C        MOV ECX,DWORD PTR SS:[ESP+C];->ECX=403D9901
+0047D3E0   57               PUSH EDI
+0047D3E1   8B7C24 0C        MOV EDI,DWORD PTR SS:[ESP+C];->EDI=F373000A
+0047D3E5   51               PUSH ECX
+0047D3E6   8D50 1C          LEA EDX,DWORD PTR DS:[EAX+1C];->EDX=005F5F7C
+0047D3E9   0FBF40 1A        MOVSX EAX,WORD PTR DS:[EAX+1A];->EAX=00000001
+0047D3ED   52               PUSH EDX;005F5F7C ptr to something
+0047D3EE   50               PUSH EAX;00000001 num of objs to destroy?
+0047D3EF   57               PUSH EDI;F373000A rp_h1 object tag
+0047D3F0   E8 AB010100      CALL haloce.0048D5A0
+->
+ 0048D5A0   8B4C24 04        MOV ECX,DWORD PTR SS:[ESP+4];->ECX=F373000A
+ 0048D5A4   53               PUSH EBX
+ 0048D5A5   81E1 FFFF0000    AND ECX,0FFFF;->ECX=0000000A  rp_h1 object index
+ 0048D5AB   69C9 18020000    IMUL ECX,ECX,218;->ECX=000014F0
+ 0048D5B1   55               PUSH EBP
+ 0048D5B2   8B6C24 10        MOV EBP,DWORD PTR SS:[ESP+10];->EBP=00000001
+ 0048D5B6   56               PUSH ESI
+ 0048D5B7   57               PUSH EDI
+ 0048D5B8   8B3D B0558100    MOV EDI,DWORD PTR DS:[8155B0];hs thread->EDI=403D84C8
+ 0048D5BE   8B47 34          MOV EAX,DWORD PTR DS:[EDI+34];first obj->EAX=403D8500
+ 0048D5C1   8B7408 10        MOV ESI,DWORD PTR DS:[EAX+ECX+10];rp_h1 obj?->ESI=403D9A2C
+ 0048D5C5   8D5408 10        LEA EDX,DWORD PTR DS:[EAX+ECX+10];->EDX=403D9A00
+ 0048D5C9   33DB             XOR EBX,EBX
+ 0048D5CB   66:8B5E 0C       MOV BX,WORD PTR DS:[ESI+C];->BX=0000
+ 0048D5CF   0FBFC3           MOVSX EAX,BX;->EAX=00000000
+ 0048D5D2   8D4430 0E        LEA EAX,DWORD PTR DS:[EAX+ESI+E];->EAX=403D9A3A
+ 0048D5D6   8D1CAB           LEA EBX,DWORD PTR DS:[EBX+EBP*4];->EBX=00000004
+ 0048D5D9   66:895E 0C       MOV WORD PTR DS:[ESI+C],BX;write 0004
+ 0048D5DD   8B77 34          MOV ESI,DWORD PTR DS:[EDI+34];first obj->ESI=403D8500
+ 0048D5E0   8B740E 10        MOV ESI,DWORD PTR DS:[ESI+ECX+10];rp_h1 obj?->ESI=403D9A2C
+ 0048D5E4   33DB             XOR EBX,EBX
+ 0048D5E6   66:8B5E 0C       MOV BX,WORD PTR DS:[ESI+C];->BX=0004
+ 0048D5EA   0FBFEB           MOVSX EBP,BX;->EBP=00000004
+ 0048D5ED   8D6C2E 0E        LEA EBP,DWORD PTR DS:[ESI+EBP+E];->EBP=403D9A3E
+ 0048D5F1   83C3 02          ADD EBX,2;->EBX=00000006
+ 0048D5F4   66:895E 0C       MOV WORD PTR DS:[ESI+C],BX;write 0006
+ 0048D5F8   8B77 34          MOV ESI,DWORD PTR DS:[EDI+34];first obj->ESI=403D8500
+ 0048D5FB   8B4C0E 10        MOV ECX,DWORD PTR DS:[ESI+ECX+10];rp_h1 obj?->ECX=403D9A2C
+ 0048D5FF   8B1D B4558100    MOV EBX,DWORD PTR DS:[8155B4];script node->EBX=40488908
+ 0048D605   33F6             XOR ESI,ESI
+ 0048D607   66:8B71 0C       MOV SI,WORD PTR DS:[ECX+C]
+ 0048D60B   0FBFFE           MOVSX EDI,SI
+ 0048D60E   8D7C0F 0E        LEA EDI,DWORD PTR DS:[EDI+ECX+E]
+ 0048D612   83C6 04          ADD ESI,4
+ 0048D615   66:8971 0C       MOV WORD PTR DS:[ECX+C],SI
+ 0048D619   8A4C24 20        MOV CL,BYTE PTR SS:[ESP+20]
+ 0048D61D   84C9             TEST CL,CL
+ 0048D61F   74 2A            JE SHORT haloce.0048D64B
+
+
+0047D3F5   83C4 10          ADD ESP,10
+0047D3F8   85C0             TEST EAX,EAX
+0047D3FA   74 27            JE SHORT haloce.0047D423
+...
+
+
+0048D678   8D1CB0           LEA EBX,DWORD PTR DS:[EAX+ESI*4];->EBX=403D9A3A
+0048D67B   8BC2             MOV EAX,EDX;->EAX=F2A80002
+0048D67D   8B5424 14        MOV EDX,DWORD PTR SS:[ESP+14];->EDX=F373000A
+0048D681   E8 2AFCFFFF      CALL haloce.0048D2B0
+->
+;1st JE not taken
+;2nd JE taken
+...
+0048D33A   8B46 10          MOV EAX,DWORD PTR DS:[ESI+10];->EAX=FFFF0009
+0048D33D   66:8B4E 04       MOV CX,WORD PTR DS:[ESI+4];->CX=0025
+0048D341   66:8B56 02       MOV DX,WORD PTR DS:[ESI+2];->DX=002B
+0048D345   E8 26070000      CALL haloce.0048DA70
+->
+0048DA70   66:3BD1          CMP DX,CX
+0048DA73   74 45            JE SHORT haloce.0048DABA
+0048DA75   66:83FA 03       CMP DX,3
+0048DA79   74 3F            JE SHORT haloce.0048DABA
+0048DA7B   66:83F9 2B       CMP CX,2B
+0048DA7F   7C 06            JL SHORT haloce.0048DA87
+...
+0048DA87   66:83F9 25       CMP CX,25
+0048DA8B   7C 17            JL SHORT haloce.0048DAA4
+0048DA8D   66:83F9 2A       CMP CX,2A
+0048DA91   7F 11            JG SHORT haloce.0048DAA4
+0048DA93   66:83FA 2B       CMP DX,2B
+0048DA97   7C 21            JL SHORT haloce.0048DABA
+0048DA99   66:83FA 30       CMP DX,30
+0048DA9D   7F 1B            JG SHORT haloce.0048DABA
+0048DA9F   E9 ACD50600      JMP haloce.004FB050
+...
+004FB050   66:85C0          TEST AX,AX
+004FB053   7C 13            JL SHORT haloce.004FB068
+004FB055   66:3D 0002       CMP AX,200
+004FB059   7D 0D            JGE SHORT haloce.004FB068
+004FB05B   8B0D 083C6500    MOV ECX,DWORD PTR DS:[653C08];veh obj tag list->ECX=402567BC
+004FB061   0FBFC0           MOVSX EAX,AX;->EAX=00000009
+004FB064   8B0481           MOV EAX,DWORD PTR DS:[ECX+EAX*4];->EAX=E27C000D VEH OBJ TAG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+004FB067   C3               RETN
+<-
+0048D34A   5F               POP EDI
+0048D34B   5E               POP ESI
+0048D34C   8903             MOV DWORD PTR DS:[EBX],EAX
+0048D34E   5D               POP EBP
+0048D34F   C3               RETN
+<-
+;get veh obj tag from hs thread obj tag?
+;EAX=rp_h1 object tag
+0048D686   8B07             MOV EAX,DWORD PTR DS:[EDI]
+
+
+
+<-
+...3
+0048D1E0   51               PUSH ECX;ECX=403D9900
+0048D1E1   57               PUSH EDI;EDI=F373000A
+0048D1E2   50               PUSH EAX;EAX=00000027
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5F60   haloce.0047D3D0
+->
+0047D3D0   0FBF4424 04      MOVSX EAX,WORD PTR SS:[ESP+4]
+0047D3D5   8B0485 18416200  MOV EAX,DWORD PTR DS:[EAX*4+624118]
+0047D3DC   8B4C24 0C        MOV ECX,DWORD PTR SS:[ESP+C]
+0047D3E0   57               PUSH EDI
+0047D3E1   8B7C24 0C        MOV EDI,DWORD PTR SS:[ESP+C]
+0047D3E5   51               PUSH ECX
+0047D3E6   8D50 1C          LEA EDX,DWORD PTR DS:[EAX+1C]
+0047D3E9   0FBF40 1A        MOVSX EAX,WORD PTR DS:[EAX+1A]
+0047D3ED   52               PUSH EDX
+0047D3EE   50               PUSH EAX
+0047D3EF   57               PUSH EDI
+0047D3F0   E8 AB010100      CALL haloce.0048D5A0
+0047D3F5   83C4 10          ADD ESP,10
+0047D3F8   85C0             TEST EAX,EAX;EAX is ptr to rp_h1 obj tag
+0047D3FA   74 27            JE SHORT haloce.0047D423
+0047D3FC   56               PUSH ESI
+0047D3FD   8B30             MOV ESI,DWORD PTR DS:[EAX];->ESI=E27C000D
+0047D3FF   83FE FF          CMP ESI,-1;valid tag?
+0047D402   74 14            JE SHORT haloce.0047D418
+
+;test if players are in veh
+0047D404   56               PUSH ESI
+0047D405   E8 56D50000      CALL haloce.0048A960
+0047D40A   83C4 04          ADD ESP,4
+0047D40D   84C0             TEST AL,AL;AL=00
+0047D40F   75 07            JNZ SHORT haloce.0047D418
+
+;"\x8B\x0D\x00\x00\x00\x00\x8B\x51\x34\x57" "xx????xxxx"
+;destroy obj
+0047D411   8BC6             MOV EAX,ESI
+0047D413   E8 48C40700      CALL haloce.004F9860
+
+0047D418   5E               POP ESI
+0047D419   8BCF             MOV ECX,EDI
+0047D41B   33C0             XOR EAX,EAX
+0047D41D   5F               POP EDI
+0047D41E   E9 6DFF0000      JMP haloce.0048D390
+...;update hs thread?
+0048D390   81E1 FFFF0000    AND ECX,0FFFF
+0048D396   56               PUSH ESI
+0048D397   8BF1             MOV ESI,ECX
+0048D399   8B0D B0558100    MOV ECX,DWORD PTR DS:[8155B0]
+0048D39F   69F6 18020000    IMUL ESI,ESI,218
+0048D3A5   57               PUSH EDI
+0048D3A6   8B79 34          MOV EDI,DWORD PTR DS:[ECX+34]
+0048D3A9   8B5437 10        MOV EDX,DWORD PTR DS:[EDI+ESI+10]
+0048D3AD   8B4A 04          MOV ECX,DWORD PTR DS:[EDX+4]
+0048D3B0   8B15 B4558100    MOV EDX,DWORD PTR DS:[8155B4]
+0048D3B6   8B52 34          MOV EDX,DWORD PTR DS:[EDX+34]
+0048D3B9   03FE             ADD EDI,ESI
+0048D3BB   81E1 FFFF0000    AND ECX,0FFFF
+0048D3C1   8D0C89           LEA ECX,DWORD PTR DS:[ECX+ECX*4]
+0048D3C4   8D0C8A           LEA ECX,DWORD PTR DS:[EDX+ECX*4]
+0048D3C7   F641 06 02       TEST BYTE PTR DS:[ECX+6],2
+0048D3CB   0FBF51 02        MOVSX EDX,WORD PTR DS:[ECX+2]
+0048D3CF   75 0C            JNZ SHORT haloce.0048D3DD
+
+;map info struct
+;haloce.1.09 = 0x6E226C
+;halopc.1.09 = 0x746F8C
+;"\x83\xF9\xFF\x0F\x84\x00\x00\x00\x00\xA1\x00\x00\x00\x00\x8B\xB0" "xxxxx????x????xx"
+;(index+index*8)*4 or index*24h(36)+ veh name list pointer
+;[[MIS]+208] = veh name list pointer 
+;[[MIS]+204] = num of veh names (int)
+
+;vehicle obj tag list (matched against veh name list)
+;haloce.1.09 = 0x653C08
+;halopc.1.09 = 0x6B8CB8
+;"\x3B\x86\x00\x00\x00\x00\x7D\x09\x8B\x35\" "xx????xxxx"
+;[[VOTL]+index*4] = veh obj tag halopc1.09=746F8C

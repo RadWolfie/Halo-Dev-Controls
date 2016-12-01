@@ -1,0 +1,229 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "Resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "Resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_WINMAIN             ICON                    "Symbol 2+4 trans.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_MW_BG               BITMAP                  "hdc_rpg_logo_bg.bmp"
+IDB_EYE                 BITMAP                  "green-eye.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,3,0,0
+ PRODUCTVERSION 2,3,0,0
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "May need to be run as admin. HDC.drv needs to be in the same folder in order for the commands and keyboard shortcuts to work. "
+            VALUE "CompanyName", "Jesus7Freak"
+            VALUE "FileDescription", "Halo App"
+            VALUE "FileVersion", "2, 3, 0, 0"
+            VALUE "InternalName", "HDC"
+            VALUE "LegalCopyright", "Copyright (C) 2011"
+            VALUE "LegalTrademarks", "Thanks to Jesus for salvation, Believe in Him and be saved!"
+            VALUE "OriginalFilename", "Halo Dev Controls.exe"
+            VALUE "ProductName", "Halo Dev Controls"
+            VALUE "ProductVersion", "2, 3, 0, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUT DIALOGEX 0, 0, 250, 175
+STYLE DS_SETFONT | DS_CENTER | WS_POPUP
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_BACKGROUND,"Static",SS_BITMAP,0,0,15,13
+    CONTROL         "OK",IDOK,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,108,151,36,17,WS_EX_TRANSPARENT
+    LTEXT           "Halo Dev Controls",IDC_ABOUT_NAME,90,5,86,9,NOT WS_GROUP,WS_EX_TRANSPARENT
+    LTEXT           "Version: ",IDC_ABOUT_VERSION,90,20,80,9,NOT WS_GROUP,WS_EX_TRANSPARENT
+    CTEXT           "Beta Testers:\r\nShadow\r\nAoO Aurora\r\nN®Þ»Jedi\r\nÇAG»Dark_Špyrø\r\nMarko Ramius\r\nRad! ",IDC_ABOUT_CREDITS,8,49,75,79,NOT WS_GROUP,WS_EX_TRANSPARENT
+    CTEXT           "Thanks to:\r\nJesus for salvation,\r\nBelieve in Him and\r\nhave eternal Life!\r\nPatrícia <3\r\nBungie\r\nPatrickssj6\r\nOxide\r\nOpsY",IDC_ABOUT_THANKS,161,26,84,111,NOT WS_GROUP,WS_EX_TRANSPARENT
+    LTEXT           "Player Commands based on Devicator",IDC_ABOUT_PLAYER_CMDS,9,135,150,15,NOT WS_GROUP,WS_EX_TRANSPARENT
+    CTEXT           "Created By:\r\nJesus7Freak",IDC_ABOUT_AUTHOR,98,70,59,38,NOT WS_GROUP,WS_EX_TRANSPARENT
+END
+
+IDD_CMDS DIALOGEX 0, 0, 280, 92
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Dialog"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&OK",IDOK,242,78,35,12
+    LISTBOX         IDC_LISTBOX,2,3,80,88,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_CMD_TXTBX,86,3,126,12,ES_AUTOHSCROLL | ES_READONLY,WS_EX_CLIENTEDGE
+    LTEXT           "Cmd Usage",IDC_USAGE_LBL,86,21,131,24
+    CONTROL         "Enable Shortcuts",IDC_ENABLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,171,79,60,10
+    PUSHBUTTON      "none",IDC_ACT_BTN,232,25,45,14,BS_FLAT | WS_DISABLED
+    PUSHBUTTON      "none",IDC_ON_BTN,232,42,45,14,BS_FLAT | WS_DISABLED
+    PUSHBUTTON      "none",IDC_OFF_BTN,232,59,45,14,BS_FLAT | WS_DISABLED
+    LTEXT           "Toggle | Activate",IDC_ACT_LBL,228,16,52,8
+    LTEXT           "",IDC_SEC_DESCRIPT,86,80,124,8,NOT WS_VISIBLE | NOT WS_GROUP
+    LTEXT           "On",IDC_ON_LBL,220,45,12,8
+    LTEXT           "Off",IDC_OFF_LBL,219,62,11,8
+    LTEXT           "Cmd Description",IDC_DESCRIPT_LBL,86,49,131,24
+END
+
+IDD_CHANGE_KEY DIALOGEX 0, 0, 126, 30
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Change Key"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_CK_CODE,73,16,20,12,ES_AUTOHSCROLL | WS_GROUP
+    PUSHBUTTON      "OK",IDOK,3,15,26,12
+    LTEXT           "Press a key",IDC_CK_I_LBL,3,3,37,8,NOT WS_GROUP
+    LTEXT           "KeyCode",IDC_CK_LBL,39,17,29,8,NOT WS_GROUP
+    LTEXT           "none",IDC_CK_NAME_LBL,50,3,50,8,NOT WS_GROUP
+    EDITTEXT        IDC_CK_HCODE,98,16,26,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "none",IDC_CK_BTN_NONE,103,3,21,11
+END
+
+IDD_TELE_LOC DIALOGEX 0, 0, 336, 84
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Teleport Locations"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,283,68,50,14
+    LISTBOX         IDC_TL_MAPLIST,2,12,70,70,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_TL_LOCLIST,76,12,47,70,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Maps",IDC_TL_MAP_LBL,29,2,18,8
+    LTEXT           "Locations",IDC_TL_LOC_LBL,84,3,32,8
+    PUSHBUTTON      "Remove",IDC_TL_REMOVE_BTN,275,10,50,14
+    PUSHBUTTON      "Add",IDC_TL_ADD_BTN,135,10,50,14
+    PUSHBUTTON      "Set (Change Location)",IDC_TL_SET_BTN,135,68,136,14
+    EDITTEXT        IDC_TL_X_TXTBX,126,50,65,14,0,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_TL_Y_TXTBX,197,50,65,14,0,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_TL_Z_TXTBX,268,50,65,14,0,WS_EX_CLIENTEDGE
+    LTEXT           "x coordinate",IDC_TL_X_LBL,138,38,38,8
+    LTEXT           "y coordinate",IDC_TL_Y_LBL,210,38,38,8
+    LTEXT           "z coordinate",IDC_TL_Z_LBL,280,38,38,8
+    LTEXT           "Location Name",IDC_TL_LOCNAME_LBL,206,8,47,8
+    EDITTEXT        IDC_TL_LOCNAME_TXTBX,204,20,50,14,0,WS_EX_CLIENTEDGE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_CMDS, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 91
+    END
+
+    IDD_CHANGE_KEY, DIALOG
+    BEGIN
+        RIGHTMARGIN, 124
+        BOTTOMMARGIN, 28
+    END
+
+    IDD_TELE_LOC, DIALOG
+    BEGIN
+        RIGHTMARGIN, 333
+        BOTTOMMARGIN, 82
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

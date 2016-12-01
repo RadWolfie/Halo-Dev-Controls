@@ -1,0 +1,71 @@
+;notes by Jesus7Freak
+;haloce1.09 p0 rpg_beta6_2 rp_h1
+;vehicle_load_magic rp_h1 driver (unit (list_get (players) 0))
+;console 004C9BE3
+
+...1 ;inspect
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+...2 ;vehicle_load_magic
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F698C  ; haloce.0047EF10
+...3 ;vehicle_load_magic
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F698C  ; haloce.0047EF10
+...4 ;vehicle_load_magic
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F698C  ; haloce.0047EF10
+...5 ;unit
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DF4  ; haloce.0048C9D0
+...6 ;list_get
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F60A0  ; haloce.0047D6C0
+...7 ;players
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F5EA4  ; haloce.0047D1D0
+...8 ;list_get
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F60A0  ; haloce.0047D6C0
+...9 ;list_get
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F60A0  ; haloce.0047D6C0
+...10 ;unit
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DF4  ; haloce.0048C9D0
+...11 ;vehicle_load_magic
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F698C  ; haloce.0047EF10
+...12 ;inspect
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+
+
+
+
+...11 ;vehicle_load_magic
+0048D1E3   FF52 0C       CALL DWORD PTR DS:[EDX+C] ;EDX=005F698C  ; haloce.0047EF10
+->
+0047EF10   51               PUSH ECX
+0047EF11   0FBF4424 08      MOVSX EAX,WORD PTR SS:[ESP+8] ;->EAX=00000074
+0047EF16   8B0485 18416200  MOV EAX,DWORD PTR DS:[EAX*4+624118] ;->EAX=005F698C
+0047EF1D   8B4C24 10        MOV ECX,DWORD PTR SS:[ESP+10] ;->ECX=403D9900
+0047EF21   56               PUSH ESI
+0047EF22   8B7424 10        MOV ESI,DWORD PTR SS:[ESP+10] ;->ESI=F373000A
+0047EF26   51               PUSH ECX
+0047EF27   8D50 1C          LEA EDX,DWORD PTR DS:[EAX+1C] ;->EDX=005F69A8
+0047EF2A   0FBF40 1A        MOVSX EAX,WORD PTR DS:[EAX+1A] ;->EAX=00000003 (3 parameter?)
+0047EF2E   52               PUSH EDX
+0047EF2F   50               PUSH EAX
+0047EF30   56               PUSH ESI
+0047EF31   C74424 14 00000000 MOV DWORD PTR SS:[ESP+14],0
+0047EF39   E8 62E60000      CALL haloce.0048D5A0
+0047EF3E   83C4 10          ADD ESP,10
+0047EF41   85C0             TEST EAX,EAX ;EAX=403D9A3A (ptr to param data)
+0047EF43   74 26            JE SHORT haloce.0047EF6B
+0047EF45   8B48 04          MOV ECX,DWORD PTR DS:[EAX+4] ;->ECX=404E5CFF (ASCII "driver")
+0047EF48   8B10             MOV EDX,DWORD PTR DS:[EAX] ;->EDX=E27C000D (rp_h1 obj tag)
+;vehicle load magic
+0047EF4A   8B40 08          MOV EAX,DWORD PTR DS:[EAX+8] ;->EAX=E2700001 param3 (object list header tag)
+0047EF4D   51               PUSH ECX ;param2 vehicle position string
+0047EF4E   52               PUSH EDX ;param1 vehicle obj tag
+0047EF4F   E8 ACF20E00      CALL haloce.0056E200
+0047EF54   83C4 08          ADD ESP,8
+
+0047EF57   66:894424 04     MOV WORD PTR SS:[ESP+4],AX ;AX=0001 (1 played loaded into veh)
+0047EF5C   8B4424 04        MOV EAX,DWORD PTR SS:[ESP+4]
+0047EF60   8BCE             MOV ECX,ESI
+0047EF62   5E               POP ESI
+0047EF63   83C4 04          ADD ESP,4
+0047EF66   E9 25E40000      JMP haloce.0048D390
+;0047EF6B   5E               POP ESI
+;0047EF6C   59               POP ECX
+;0047EF6D   C3               RETN

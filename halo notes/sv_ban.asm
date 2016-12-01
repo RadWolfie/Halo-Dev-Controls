@@ -1,0 +1,102 @@
+;notes by Jesus7Freak
+;haloce1.09 p0 bloodgulch
+;console 004C9BE3
+...1 ;inspect
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+...2 ;sv_ban
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F9998   haloce.00485950
+...3 ;sv_ban
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F9998   haloce.00485950
+...4 ;inspect
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F5DD8   haloce.0048C8D0
+
+
+...2
+0048D1E0   51               PUSH ECX ;403D8500
+0048D1E1   57               PUSH EDI ;F3690000
+0048D1E2   50               PUSH EAX ;000001F2
+0048D1E3   FF52 0C          CALL DWORD PTR DS:[EDX+C] ;EDX=005F9998   haloce.00485950
+->
+00485950   83EC 08          SUB ESP,8 ;->20
+00485953   8B5424 14        MOV EDX,DWORD PTR SS:[ESP+14] ;34
+00485957   33C0             XOR EAX,EAX
+00485959   56               PUSH ESI ;1c
+0048595A   8B7424 14        MOV ESI,DWORD PTR SS:[ESP+14] ;30
+0048595E   894424 08        MOV DWORD PTR SS:[ESP+8],EAX ;24
+00485962   894424 04        MOV DWORD PTR SS:[ESP+4],EAX ;20
+00485966   8D4424 04        LEA EAX,DWORD PTR SS:[ESP+4] ;20
+0048596A   50               PUSH EAX ;18
+0048596B   8D4C24 0C        LEA ECX,DWORD PTR SS:[ESP+C] ;24
+0048596F   51               PUSH ECX ;14
+00485970   52               PUSH EDX ;10
+00485971   56               PUSH ESI ;c
+00485972   E8 49810000      CALL haloce.0048DAC0
+00485977   83C4 10          ADD ESP,10 ;1c
+0048597A   84C0             TEST AL,AL
+0048597C   74 16            JE SHORT haloce.00485994
+...
+;ECX char ptr array
+;{
+;  player index char ptr "1" (1 based)
+;  "dhms" char ptr "4,5,3"
+;}
+;EAX is 1 when only the player index is given, and 2 when both player index and "dhms" are given
+0048597E   8B4C24 04        MOV ECX,DWORD PTR SS:[ESP+4];ECX=403D854E ;20
+00485982   8B4424 08        MOV EAX,DWORD PTR SS:[ESP+8] ;24
+00485986   E8 35190600      CALL haloce.004E72C0
+->
+ 004E72C0   66:833D D0476B00 CMP WORD PTR DS:[6B47D0],2
+ 004E72C8   0F85 CF000000    JNZ haloce.004E739D
+ 004E72CE   85C0             TEST EAX,EAX;EAX=00000001
+ 004E72D0   0F8E B7000000    JLE haloce.004E738D
+ 004E72D6   83F8 02          CMP EAX,2
+ 004E72D9   0F8F AE000000    JG haloce.004E738D
+ 004E72DF   55               PUSH EBP
+ 004E72E0   83CD FF          OR EBP,FFFFFFFF
+ 004E72E3   83F8 02          CMP EAX,2
+ 004E72E6   56               PUSH ESI
+ 004E72E7   8B31             MOV ESI,DWORD PTR DS:[ECX]
+ 004E72E9   75 2B            JNZ SHORT haloce.004E7316
+ ...
+ 004E7316   53               PUSH EBX
+ 004E7317   8BC6             MOV EAX,ESI
+ 004E7319   E8 82050000      CALL haloce.004E78A0
+ 004E731E   8BD8             MOV EBX,EAX ;EAX ptr to player name
+ 004E7320   85DB             TEST EBX,EBX 
+ 004E7322   74 4E            JE SHORT haloce.004E7372
+ 004E7324   8B35 84736B00    MOV ESI,DWORD PTR DS:[6B7384]            ; haloce.007FC340
+ 004E732A   57               PUSH EDI
+ 004E732B   0FBE7B 1C        MOVSX EDI,BYTE PTR DS:[EBX+1C]
+ 004E732F   E8 4CCCFFFF      CALL haloce.004E3F80
+ 004E7334   8BF8             MOV EDI,EAX
+ 004E7336   85FF             TEST EDI,EDI
+ 004E7338   74 10            JE SHORT haloce.004E734A
+ 004E7338   74 10            JE SHORT haloce.004E734A
+ 004E733A   8B07             MOV EAX,DWORD PTR DS:[EDI]
+ 004E733C   85C0             TEST EAX,EAX
+ 004E733E   74 0A            JE SHORT haloce.004E734A
+ 004E733E   74 0A            JE SHORT haloce.004E734A
+ 004E7340   8A88 980A0000    MOV CL,BYTE PTR DS:[EAX+A98]
+ 004E7346   84C9             TEST CL,CL
+ 004E7348   75 2C            JNZ SHORT haloce.004E7376
+ ...
+ 004E7376   A1 D8076200      MOV EAX,DWORD PTR DS:[6207D8]
+ 004E737B   68 58D06000      PUSH haloce.0060D058                     ; ASCII "sv_ban:  Can't ban a local client!"
+ 004E7380   E8 FB28FBFF      CALL haloce.00499C80
+ 004E7385   83C4 04          ADD ESP,4
+ 004E7388   5F               POP EDI
+ 004E7389   5B               POP EBX
+ 004E738A   5E               POP ESI
+ 004E738B   5D               POP EBP
+ 004E738C   C3               RETN
+<-
+0048598B   33C0             XOR EAX,EAX
+0048598D   8BCE             MOV ECX,ESI
+0048598F   E8 FC790000      CALL haloce.0048D390
+00485994   5E               POP ESI
+00485995   83C4 08          ADD ESP,8
+00485998   C3               RETN
+
+
+
+
