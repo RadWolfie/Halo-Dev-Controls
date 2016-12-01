@@ -1,6 +1,6 @@
 # Halo Dev Controls
 
-### NOTICE: This is not the official release from original author.
+### NOTICE: This is not the official release from original author. And is given permission to upload on github.
 
 Tested to work for Halo PC and CE 1.10. Made to, theoretically, work for all 
 previous, and future versions of Halo PC and CE. This is NOT a dedicated
