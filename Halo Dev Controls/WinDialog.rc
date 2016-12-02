@@ -70,8 +70,8 @@ IDB_EYE                 BITMAP                  "green-eye.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,4,1,0
- PRODUCTVERSION 2,4,1,0
+ FILEVERSION 2,4,2,0
+ PRODUCTVERSION 2,4,2,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -89,13 +89,13 @@ BEGIN
             VALUE "Comments", "May need to be run as admin. HDC.drv needs to be in the same folder in order for the commands and keyboard shortcuts to work. "
             VALUE "CompanyName", "Jesus7Freak"
             VALUE "FileDescription", "Halo App"
-            VALUE "FileVersion", "2, 4, 1, 0"
+            VALUE "FileVersion", "2, 4, 2, 0"
             VALUE "InternalName", "HDC"
             VALUE "LegalCopyright", "Copyright (C) 2011"
             VALUE "LegalTrademarks", "Thanks to Jesus for salvation, Believe in Him and be saved!"
             VALUE "OriginalFilename", "Halo Dev Controls.exe"
             VALUE "ProductName", "Halo Dev Controls"
-            VALUE "ProductVersion", "2, 4, 1, 0"
+            VALUE "ProductVersion", "2, 4, 2, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -226,4 +226,3 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
