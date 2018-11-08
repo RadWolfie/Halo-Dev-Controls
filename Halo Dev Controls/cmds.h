@@ -63,13 +63,13 @@ namespace CMDsLib
 
    void GetSKeysFromFile(wchar_t *FileName);
    void WriteSKeysToFile(wchar_t *FileName);
-   
+
    int GetCMDArgCount(wchar_t *cmd_str);
    int FindCMDArgIndex(wchar_t *cmd_str, int num_of_spaces);
    int ParseStrFloat(wchar_t *str_num, float *num);
    int ParseStrInt(wchar_t *str_num, int *num);
    int ParseStrBool(wchar_t *str_bool, int *boolean);
-   
+
    extern CMD_DESCRIPT halo_cmd_descripts[HALO_CMDS_SIZE];
    extern char *halo_cmd_strs[HALO_CMDS_SIZE];
    extern CMD_SCKEYS halo_cmd_keys[HALO_CMDS_SIZE];
@@ -84,6 +84,6 @@ namespace CMDsLib
    extern COMMANDS halo_commands;
    extern COMMANDS rpgbeta6_2_commands;
    extern COMMANDS player_commands;
-   
+
    extern COMMANDS *all_commands[CMD_SET_SIZE];
 }

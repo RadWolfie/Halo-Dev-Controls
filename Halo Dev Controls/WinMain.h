@@ -73,23 +73,23 @@ BOOL CALLBACK TeleLocDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 BOOL CALLBACK AboutDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK EditMaskProc(
-   HWND hCtrl, 
-   UINT message, 
-   WPARAM wParam, 
-   LPARAM lParam, 
-   UINT_PTR uIdSubclass, 
+   HWND hCtrl,
+   UINT message,
+   WPARAM wParam,
+   LPARAM lParam,
+   UINT_PTR uIdSubclass,
    DWORD_PTR dwRefData
    );
-   
+
 LRESULT CALLBACK MouseOverProc(
-   HWND hCtrl, 
-   UINT message, 
-   WPARAM wParam, 
-   LPARAM lParam, 
-   UINT_PTR uIdSubclass, 
+   HWND hCtrl,
+   UINT message,
+   WPARAM wParam,
+   LPARAM lParam,
+   UINT_PTR uIdSubclass,
    DWORD_PTR dwRefData
    );
-   
+
 DWORD WINAPI HDCThread(LPVOID lpMainWin);
 
 //for transparent controls
@@ -112,7 +112,7 @@ inline void str_to_wstr(char *str, wchar_t *wstr);
 #define HHALO_STATUS    1
 #define HMAP_LBL        2
 #define HMAP_STATUS     3
-#define HMENU_BUTTON    4 
+#define HMENU_BUTTON    4
 #define HSERVER_STATUS  5
 
 #define HDEV            6
@@ -148,7 +148,7 @@ extern bool exiting,
    rpgb6_2_running,
    Locked,
    Nuked;
-      
+
 extern BOOL theme_active;
 
 extern wchar_t *szWindowClass,
@@ -199,7 +199,7 @@ extern DWORD scan_size,
    //RiderEjection_address;
    cse_set_video_func_address,
    cinematic_ptr;
-      
+
 enum game_types : WORD
    { not_running = 0, Halo = 1, HCE = 2 } extern running_gt;
 
@@ -208,5 +208,5 @@ enum server_type : WORD
 
 extern HaloCE_lib::DATA_HEADER Device_Groups_Header,
    HS_Global_Header;
-   
+
 extern HINSTANCE hInst;

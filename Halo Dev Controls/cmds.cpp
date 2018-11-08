@@ -34,9 +34,9 @@ namespace CMDsLib
    {
       HANDLE hFile;
       if ((hFile = CreateFileW(
-         FileName, 
-         GENERIC_WRITE, 
-         FILE_SHARE_WRITE, 
+         FileName,
+         GENERIC_WRITE,
+         FILE_SHARE_WRITE,
          NULL,
          CREATE_ALWAYS,
          FILE_ATTRIBUTE_NORMAL,
@@ -44,30 +44,30 @@ namespace CMDsLib
       {
          DWORD size_in_bytes = (sizeof(CMD_SCKEYS) * (HALO_CMDS_SIZE + RPGB_CMDS_SIZE))
             + (sizeof(bool) * 2);
-         
+
          char *buffer = new char[size_in_bytes];
-         
+
          char *byte_p_hck = (char*)&halo_cmd_keys;
          int hcs = sizeof(CMD_SCKEYS) * HALO_CMDS_SIZE;
          DWORD buffer_loc = hcs;
          for (int bi = 0; bi < hcs; bi++)
             buffer[bi] = byte_p_hck[bi];
-         
-         
+
+
          char *byte_p_rbck = (char*)&rpg_beta6_2_cmd_keys;
          char *byte_p_buffer = &buffer[buffer_loc];
          int rbcs = sizeof(CMD_SCKEYS) * RPGB_CMDS_SIZE;
          buffer_loc += rbcs;
          for (int bi = 0; bi < rbcs; bi++)
             byte_p_buffer[bi] = byte_p_rbck[bi];
-            
+
          buffer[buffer_loc++] = (char)halo_commands.Enable_Shrtcts;
          buffer[buffer_loc] = (char)rpgbeta6_2_commands.Enable_Shrtcts;
-         
+
          DWORD written;
          if(!WriteFile(hFile, buffer, size_in_bytes, &written, NULL))
             DWORD dosretval = GetLastError();
-            
+
          delete[] buffer;
          CloseHandle(hFile);
       }
@@ -77,9 +77,9 @@ namespace CMDsLib
    {
       HANDLE hFile;
       if ((hFile = CreateFileW(
-         FileName, 
-         GENERIC_READ, 
-         FILE_SHARE_READ, 
+         FileName,
+         GENERIC_READ,
+         FILE_SHARE_READ,
          NULL,
          OPEN_EXISTING,
          FILE_ATTRIBUTE_NORMAL,
@@ -87,29 +87,29 @@ namespace CMDsLib
       {
          DWORD size_in_bytes = (sizeof(CMD_SCKEYS) * (HALO_CMDS_SIZE + RPGB_CMDS_SIZE))
             + (sizeof(bool) * 2);
-         
+
          char *buffer = new char[size_in_bytes];
-         
+
          DWORD bytes_read;
          if (!ReadFile(hFile, buffer, size_in_bytes, &bytes_read, NULL))
             DWORD dosretval = GetLastError();
-         
+
          char *byte_p_hck = (char*)&halo_cmd_keys;
          int hcs = sizeof(CMD_SCKEYS) * HALO_CMDS_SIZE;
          DWORD buffer_loc = hcs;
          for (int bi = 0; bi < hcs; bi++)
             byte_p_hck[bi] = buffer[bi];
-         
+
          char *byte_p_rbck = (char*)&rpg_beta6_2_cmd_keys;
          char *byte_p_buffer = &buffer[buffer_loc];
          int rbcs = sizeof(CMD_SCKEYS) * RPGB_CMDS_SIZE;
          buffer_loc += rbcs;
          for (int bi = 0; bi < rbcs; bi++)
             byte_p_rbck[bi] = byte_p_buffer[bi];
-            
+
          halo_commands.Enable_Shrtcts = (int)buffer[buffer_loc++];
          rpgbeta6_2_commands.Enable_Shrtcts = (int)buffer[buffer_loc];
-         
+
          delete[] buffer;
          CloseHandle(hFile);
       }
@@ -165,28 +165,28 @@ namespace CMDsLib
          File.close();
       }
    }*/
-   
+
    int GetCMDArgCount(wchar_t *cmd_str)
    {
       //count the number of spaces
       int arg_count = 0; bool is_in_parenth = false;
       wchar_t wchar;
-      
+
       do
       {
          wchar = *cmd_str++;
-         
+
          if (wchar == L'\"')
             is_in_parenth = !is_in_parenth;
-                           
+
          if (wchar == ' ' && !is_in_parenth)
             ++arg_count;
-            
+
       }while (wchar);
-      
+
       return arg_count;
    }
-   
+
    int FindCMDArgIndex(wchar_t *cmd_str, int num_of_spaces)
    {
       //count the number of spaces
@@ -195,7 +195,7 @@ namespace CMDsLib
       {
          if (cmd_str[str_2arg_index] == '\"')
             is_in_parenth = !is_in_parenth;
-                           
+
          if (cmd_str[str_2arg_index] == ' ' && !is_in_parenth)
             spaces_cnt++;
       }
@@ -206,7 +206,7 @@ namespace CMDsLib
    {
       bool succeded = true, negative = false; int wchar_i = 0;
       float _num = 0; int num_of_digits = 0, fp_index = 0;
-      
+
       //check if its a negative number
       if (*str_num == '-')
       {
@@ -214,7 +214,7 @@ namespace CMDsLib
          wchar_i++;
          fp_index--;
       }
-      
+
       for (;str_num[wchar_i] && str_num[wchar_i] != L' '; wchar_i++)
       {
          //check if its not a number
@@ -230,40 +230,40 @@ namespace CMDsLib
             fp_index += wchar_i;
             continue;
          }
-         
+
          _num *= 10;
          _num += str_num[wchar_i] - 48;
-         
+
          num_of_digits++;
       }
-      
+
       for (int i = 0; fp_index > 0 && i < num_of_digits - fp_index; i++)
          _num /= 10.0f;
-         
+
       if (negative)
          _num = 0 - _num;
-         
+
       *num = _num;
-         
+
       if (!succeded) wchar_i = 0;
-      
+
       return wchar_i;
    }
-   
+
    //returns the characters parsed count
    int ParseStrInt(wchar_t *str_num, int *num)
    {
       bool succeded = true;
       bool negative = false; int wchar_i = 0;
       int _num = 0; int num_of_digits = 0;
-      
+
       //check if its a negative number
       if (*str_num == '-')
       {
          negative = true;
          wchar_i++;
       }
-         
+
       for (;str_num[wchar_i] && str_num[wchar_i] != L' '; wchar_i++)
       {
          //check if its not a number
@@ -272,27 +272,27 @@ namespace CMDsLib
             succeded = false;
             break;
          }
-         
+
          _num *= 10;
          _num += str_num[wchar_i] - 48;
-         
+
          num_of_digits++;
       }
-         
+
       if (negative)
          _num = 0 - _num;
-         
+
       *num = _num;
-         
+
       if (!succeded) wchar_i = 0;
-      
+
       return wchar_i;
    }
-   
+
    int ParseStrBool(wchar_t *str_bool, int *boolean)
    {
       int succeded = true; int wchar_i = 0;
-      
+
       if (!str_bool[1] || str_bool[1] == L' ')
       {
          wchar_i = ParseStrInt(str_bool, boolean);
@@ -300,7 +300,7 @@ namespace CMDsLib
       else
       {
          char *strue = "true";
-         
+
          for (wchar_i = 0; wchar_i <= 4; wchar_i++)
          {
             if (strue[wchar_i] != (char)str_bool[wchar_i])
@@ -309,13 +309,13 @@ namespace CMDsLib
                break;
             }
          }
-            
+
          if (succeded) *boolean = TRUE;
          else
          {
             succeded = true;
             char *sfalse = "false";
-            
+
             for (wchar_i = 0; wchar_i <= 5; wchar_i++)
             {
                if (sfalse[wchar_i] != (char)str_bool[wchar_i])
@@ -324,7 +324,7 @@ namespace CMDsLib
                   break;
                }
             }
-            
+
             if (succeded) *boolean = FALSE;
             else wchar_i = 0;
          }
@@ -344,7 +344,7 @@ namespace CMDsLib
          L"/list_cmds",
          L"Lists all the server commands, to list all of the commands, use / in console, and press tab."
       },
-      {//2 
+      {//2
          L"List Teleport Locs",
          L"/list_locs",
          L"Lists all the teleport locations for that map."
@@ -540,7 +540,7 @@ namespace CMDsLib
    };
 
    //data that can be written to file
-   CMD_SCKEYS halo_cmd_keys[HALO_CMDS_SIZE] = 
+   CMD_SCKEYS halo_cmd_keys[HALO_CMDS_SIZE] =
    {
       {-1, -1, -1},//0
       {-1, -1, -1},//1
@@ -847,7 +847,7 @@ namespace CMDsLib
    };
 
    COMMANDS halo_commands =
-   {  
+   {
       L"Dev        ", HALO_CMDS_SIZE, 1,
       reinterpret_cast<CMD_DESCRIPT*>(&halo_cmd_descripts),
       reinterpret_cast<char**>(&halo_cmd_strs),
@@ -858,7 +858,7 @@ namespace CMDsLib
    {
       L"RPG_Beta6_2", RPGB_CMDS_SIZE, 1,
       reinterpret_cast<CMD_DESCRIPT*>(&rpg_beta6_2_cmd_descripts),
-      reinterpret_cast<char**>(&rpg_beta6_2_cmd_strs), 
+      reinterpret_cast<char**>(&rpg_beta6_2_cmd_strs),
       reinterpret_cast<CMD_SCKEYS*>(&rpg_beta6_2_cmd_keys)
    };
 
@@ -866,11 +866,11 @@ namespace CMDsLib
    {
       L"Player     ", PLAYER_CMDS_SIZE, -1,
       reinterpret_cast<CMD_DESCRIPT*>(&player_cmd_descripts),
-      reinterpret_cast<char**>(&player_cmd_strs), 
+      reinterpret_cast<char**>(&player_cmd_strs),
       NULL
    };
-   
-   COMMANDS *all_commands[CMD_SET_SIZE] = 
+
+   COMMANDS *all_commands[CMD_SET_SIZE] =
    {
       &player_commands,//these are used most
       &halo_commands,

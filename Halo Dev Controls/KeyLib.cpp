@@ -29,8 +29,8 @@
 namespace KeyLib
 {
    wchar_t *szUknownKey = L"Uknown";
-   
-   KEY_INFO key_info_list[NUM_OF_KEYS] = 
+
+   KEY_INFO key_info_list[NUM_OF_KEYS] =
    {
       {0,L"none"},
       {1,L"Left Mouse Button"},

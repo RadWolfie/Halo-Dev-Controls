@@ -38,19 +38,19 @@ wchar_t szCMD_Title[88] = {L'<',L't',L'y',L'p',L'e',L'>',L' ',L' ',L' ',L' ',
    L'e',L',',L' ',L'r',L'c',L'o',L'n',L',',L' ',L'a',L'n',L'd',L' ',L'c',L'h',
    L'a',L't',L'\0'},//wont work as regular *
    *szPlayer2ndDescript = L"See readme for [pExpression] example";
-   
+
 CMDsLib::COMMANDS *Commands = NULL;
 BOOL cmd_val_changed = FALSE;
- 
-BOOL CALLBACK CMDSDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) 
-{ 
+
+BOOL CALLBACK CMDSDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
    BOOL ret_val;
-   switch (message) 
-   { 
+   switch (message)
+   {
       case WM_CLOSE:
          ret_val = EndDialog(hDlg, 0);
          break;
-         
+
       case WM_INITDIALOG:
          HANDLE_WM_INITDIALOG(hDlg, wParam, lParam, CMDSOnInitDialog);
          ret_val = TRUE;
@@ -60,11 +60,11 @@ BOOL CALLBACK CMDSDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
          HANDLE_WM_COMMAND(hDlg, wParam, lParam, CMDSOnCommand);
          ret_val = TRUE;
          break;
-          
-      default: 
-         ret_val = FALSE; 
-   } 
-   
+
+      default:
+         ret_val = FALSE;
+   }
+
    return ret_val;
 }
 
@@ -72,17 +72,17 @@ BOOL CMDSOnInitDialog(HWND hDlg, HWND hCtrl, LPARAM init_data)
 {
    Commands = (CMDsLib::COMMANDS*)init_data;
    cmd_val_changed = FALSE;
-   
+
    wchar_t *type_name = Commands->cmds_group_name;
    for (int i = 0; type_name[i]; i++)
       szCMD_Title[i] = type_name[i];
-   
+
    SetWindowText(hDlg, szCMD_Title);
-   
+
    HWND hlistbox = GetDlgItem(hDlg, IDC_LISTBOX);
    for (int i = 0; i < Commands->size; i++)
       ListBox_AddString(hlistbox, Commands->cmd_descripts[i].cmd_title);
-   
+
    HWND hEnableCkBx = GetDlgItem(hDlg, IDC_ENABLE);
    switch (Commands->Enable_Shrtcts)
    {
@@ -96,13 +96,13 @@ BOOL CMDSOnInitDialog(HWND hDlg, HWND hCtrl, LPARAM init_data)
          Button_SetCheck(hEnableCkBx, FALSE);
          EnableWindow(hEnableCkBx, FALSE);
          ShowWindow(hEnableCkBx, 0);
-         
+
          HWND h2nd_descript = GetDlgItem(hDlg, IDC_SEC_DESCRIPT);
          SetWindowTextW(h2nd_descript, szPlayer2ndDescript);
          ShowWindow(h2nd_descript, 1);
          break;
    }
-   
+
    ListBox_SetCurSel(hlistbox, 0);
    UpdateCMDWindow(hDlg, 0);
    return TRUE;
@@ -118,11 +118,11 @@ void CMDSOnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
             case IDOK:
                EndDialog(hwnd, cmd_val_changed);
                break;
-            
+
             case IDC_CC_SET_BTN:
                //change cmd name code here
                break;
-            
+
             case IDC_ENABLE:
             {
                cmd_val_changed = TRUE;
@@ -131,7 +131,7 @@ void CMDSOnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
                ListBox_SetCurSel(GetDlgItem(hwnd, IDC_LISTBOX), 0);
                UpdateCMDWindow(hwnd, 0);
                break;
-            }   
+            }
             case IDC_ACT_BTN:
             {
                int SelectedIndex = ListBox_GetCurSel(GetDlgItem(hwnd, IDC_LISTBOX));
@@ -176,11 +176,11 @@ void CMDSOnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
             }
          }
          break;
-         
+
       case LBN_SELCHANGE:
          if (id == IDC_LISTBOX)
             UpdateCMDWindow(hwnd, ListBox_GetCurSel(hwndCtl));
-            
+
          break;
    }
 }
@@ -193,21 +193,21 @@ void UpdateCMDWindow(HWND hwnd, int SelectedIndex)
       SetWindowTextW(GetDlgItem(hwnd, IDC_CMD_TXTBX), pCD->cmd_header);
       SetWindowTextW(GetDlgItem(hwnd, IDC_USAGE_LBL), pCD->cmd_usage);
       SetWindowTextW(GetDlgItem(hwnd, IDC_DESCRIPT_LBL), pCD->cmd_descript);
-      
+
       if (Commands->cmd_keys)
       {
          BOOL enable_checked = Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLE));
-         
+
          CMDsLib::CMD_SCKEYS *pCS = &Commands->cmd_keys[SelectedIndex];
-         
+
          HWND hActBtn = GetDlgItem(hwnd, IDC_ACT_BTN);
          SetWindowTextW(hActBtn, KeyLib::Get_Key_Name(pCS->toggle_key));
          EnableWindow(hActBtn, pCS->toggle_key != -1 && enable_checked);
-         
+
          HWND hOnBtn = GetDlgItem(hwnd, IDC_ON_BTN);
          SetWindowTextW(hOnBtn, KeyLib::Get_Key_Name(pCS->on_key));
          EnableWindow(hOnBtn, pCS->on_key != -1 && enable_checked);
-         
+
          HWND hOffBtn = GetDlgItem(hwnd, IDC_OFF_BTN);
          SetWindowTextW(hOffBtn, KeyLib::Get_Key_Name(pCS->off_key));
          EnableWindow(hOffBtn, pCS->off_key != -1 && enable_checked);

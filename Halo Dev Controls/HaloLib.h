@@ -41,7 +41,7 @@ namespace HaloCE_lib
    extern ADDRESS_SIG letterbox_ptr_addr_sig;
    extern ADDRESS_SIG Rasterizer_addr_sig;
    extern ADDRESS_SIG Cinematic_addr_sig;
-   
+
    enum SERVER_TYPE { main_menu = 0, client = 1, host = 2 };
    //extern ADDRESS_SIG ServerType_ptr_addr_sig; use sv_kick sig
    extern ADDRESS_SIG Game_Speed_ptr_addr_sig;
@@ -75,7 +75,7 @@ namespace HaloCE_lib
    extern ADDRESS_SIG CreateObject_func_addr_sig;
    extern ADDRESS_SIG ActiveCamo_func_addr_sig;
    extern ADDRESS_SIG PlayerDeath_func_addr_sig;
-   
+
    namespace Console
    {
       extern const BYTE Check_offset;
@@ -84,7 +84,7 @@ namespace HaloCE_lib
       extern const WORD C_Buffers_offset;
       extern const WORD C_Buffers_index_offset;
    }
-   
+
    //for internal processes
    struct RASTERIZER
    {
@@ -95,7 +95,7 @@ namespace HaloCE_lib
       BYTE FogAtmosphere;
       BYTE FogPlane;
    };
-   
+
    //for external processes
    namespace RasterizerEx
    {
@@ -104,13 +104,13 @@ namespace HaloCE_lib
       extern const BYTE FogAtmosphere_offset;
       extern const BYTE FogPlane_offset;
    }
-   
+
    namespace Cinematic
    {
       extern const BYTE Marine_View_f_offset;
       extern const BYTE screen_effect_start_offset;
    }
-   
+
    //for internal processes (rad!)
    struct CHEATS
    {
@@ -125,7 +125,7 @@ namespace HaloCE_lib
       BYTE Controller;
       BYTE Bottomless_Clip;
    };
-   
+
    //for external processes
    namespace CheatsEx
    {
@@ -140,39 +140,39 @@ namespace HaloCE_lib
       extern const BYTE Controller_offset;
       extern const BYTE Bottomless_Clip_offset;
    }
-   
+
    union OBJECT_TAG
    {
-      int Tag; 
-      struct 
+      int Tag;
+      struct
       {
          short Index;
          short ID;
       };
    };
-   
+
    struct OBJECT_TABLE_ARRAY
    {
       WORD ObjectID;           // Matches up to Object ID in player table ( for players )
-      BYTE Unknown0;//+0x2  
-      BYTE ObjectType;//+0x3 //player obj=0 veh=1 wep=2 scenery=6? 
+      BYTE Unknown0;//+0x2
+      BYTE ObjectType;//+0x3 //player obj=0 veh=1 wep=2 scenery=6?
       WORD Unknown1;//+0x4
       WORD Size;//+0x6                 // Structure size
       DWORD Object_ptr;//+0x8                // Pointer to the object data structure
    };
-   
+
    extern const short PlayerNameMaxSize;
-   
+
    extern ADDRESS_SIG Camera_Data_ptr_addr_sig;
-      
+
    struct CAMERA_DATA
    {
       DWORD unknown;       //always 1?
 	   float m_fWorld[3];
    };
-   
+
    extern ADDRESS_SIG Local_Player_ptr_addr_sig;
-      
+
    struct LOCAL_PLAYER
    {
       WORD Unknown00;
@@ -184,7 +184,7 @@ namespace HaloCE_lib
 	   BYTE Unknown03[7];//+0x15
 	   float m_fRot[3];//+0x1C
    };
-      
+
    struct STATIC_PLAYER//512bytes 0x402AAFCC
    {
       short PlayerID;           // Stats at 0x70EC
@@ -209,7 +209,7 @@ namespace HaloCE_lib
       char Uknown23;//+0x65
       BYTE Uknown3;//+0x66
       char PlayerChatIndex;//+0x67    same as player index, if changed to another players index, it will use their name
-      WORD ActiveCamoTimer;//+0x68            
+      WORD ActiveCamoTimer;//+0x68
       WORD Unknown4;//+0x6A
       float SpeedModifier;//+0x6C               // Normal = 1
       DWORD	UnknownIdent3[4];//+0x70
@@ -230,7 +230,7 @@ namespace HaloCE_lib
 	   BYTE	Unknown10[6];
 	   DWORD	UnknownIdent4;
 	   BYTE	Unknown11[8];
-      short Ping;//+0xDC   
+      short Ping;//+0xDC
       BYTE	Unknown12[14];
 	   DWORD	Unknown13;//+0xDE
 	   long	Unknown14;
@@ -259,7 +259,7 @@ namespace HaloCE_lib
 	   float m_World_delay[3];	// Oddly enough... it matches the world vect, but seems to lag behind (Possibly what the client reports is _its_ world coord?)
 	   BYTE	Unknown18[128];
    };
-   
+
    //the STATIC_PLAYER_HEADER is pretty much the same as the OBJECT_TABLE_HEADER
    struct DATA_HEADER
    {
@@ -276,10 +276,10 @@ namespace HaloCE_lib
       short NextItemID;//+0x32    // ID number of the next Item to be created
       DWORD FirstItem;//+0x34// Pointer to the first Item in the array
    };
-   
+
    // [Animation Trigger]
    extern ADDRESS_SIG AnimTriggers_ptr_sig;
-   
+
    //DATA_HEADER pointer sigs
    //extern ADDRESS_SIG Object_ptr_sig; use DestroyObj_func_addr_sig + 2
    extern ADDRESS_SIG Device_Groups_ptr_sig;
@@ -287,7 +287,7 @@ namespace HaloCE_lib
    extern ADDRESS_SIG HS_Globals_ptr_sig;
    extern ADDRESS_SIG Object_List_Header_ptr_sig;
    //list object reference ptr is + 4 from object list header ptr
-   
+
    /*struct OBJECT_TABLE_HEADER
    {
       char TName[32];          // 'object'
@@ -299,9 +299,9 @@ namespace HaloCE_lib
       WORD Num;                  // Number of objects in the current game
       WORD NextObjectIndex; // Index number of the next object to spawn
       WORD NextObjectID;      // ID number of the next object to spawn
-      DWORD FirstObject;          // Pointer to the first object in the table 
-   }; 
-   
+      DWORD FirstObject;          // Pointer to the first object in the table
+   };
+
    struct STATIC_PLAYER_HEADER
    {
       char TName[32];         // 'players'
@@ -315,7 +315,7 @@ namespace HaloCE_lib
       WORD NextPlayerID;//+0x32    // ID # of the next player to join
       DWORD Static_Player_ptr;//+0x34  // Pointer to the first static player
    };*/
-   
+
    struct WEAPON_OBJECT//size 0x66C 0x584 different for each one
    {
       BYTE unknown[0x240];
@@ -328,7 +328,7 @@ namespace HaloCE_lib
       short rounds_loaded;//+0x2B8
       float battery_gauge;//+0x438
    };
-   
+
    struct VEHICLE_OBJECT//
    {
       OBJECT_TAG BipdMetaTag;   // [Biped]
@@ -360,7 +360,7 @@ namespace HaloCE_lib
       BYTE Unknown5[128];//+2A4
       OBJECT_TAG DriverObjTag;//+0x324
    };
-   
+
    struct SPARTAN//size 0x91C - 2332
    {
       OBJECT_TAG BipdMetaTag;   // [Biped]characters\cyborg_mp\cyborg_mp
@@ -395,7 +395,7 @@ namespace HaloCE_lib
       short unknownflag; //+0xD6
       float Max_vitality_param1;//+0xD8
       float Max_vitality_param2;//+0xDC
-      float Health;//+0xE0 
+      float Health;//+0xE0
       float Shield_00;//+0xE4
       DWORD Zeros_05;//+0xE8
       float Unknown02;//+0xEC
@@ -462,7 +462,7 @@ namespace HCE_Lib
 {
    extern ADDRESS_SIG Dev_addr_sig;
    extern ADDRESS_SIG sv_say_func_addr_sig;
-   
+
    namespace rpg_beta6_2_device_groups
    {
       extern const DWORD alarm_control_1_offset;
@@ -472,7 +472,7 @@ namespace HCE_Lib
       extern const DWORD alarm_control_4_offset;
       extern const DWORD lock_control_offset;
    }
-   
+
    namespace rpg_beta6_2_hs_global
    {
       extern const WORD alarmed_offset;
@@ -482,17 +482,17 @@ namespace HCE_Lib
       extern const WORD lock_timer_offset;
       extern const WORD boom_timer_offset;
    }
-   
+
    /*
    extern const DWORD Rider_Eject_address;
    extern const DWORD Rasterizer_FPS_address;
    extern const DWORD WireFrame_address;
    extern const DWORD FogAtmosphere_address;
    extern const DWORD FogPlane_address;
-   
+
    extern const DWORD Dev_address;
-   
-      
+
+
    extern const DWORD Console_Check_address;
    extern const DWORD Console_address;
 
@@ -505,11 +505,11 @@ namespace HCE_Lib
    extern const DWORD C_Buffer_address6;
    extern const DWORD C_Buffer_address7;
    extern const DWORD C_Buffer_address8;
-   
+
    extern const DWORD Current_Map_address;
 
    extern const DWORD Game_Speed_ptr_address;
-   
+
    extern const DWORD Deathless_address;
    extern const DWORD JetPack_address;
    extern const DWORD Infinite_Ammo_address;
@@ -523,20 +523,20 @@ namespace HCE_Lib
 
    extern const DWORD Rcon_Pass_address;
    extern const DWORD Edit_Name_Buffer;
-   
+
    extern const DWORD Local_Player_ptr_address;
    extern const DWORD ObjectTableHeader_ptr_address;
    extern const DWORD StaticPlayerHeader_ptr_address;
    extern const DWORD Server_chat_address;
-   
+
    extern const DWORD Marine_View_f_address;
    extern const DWORD MV_fparameter2_address;
-   
+
    extern const DWORD Cinematic_address;
    extern const DWORD Show_Hud_address;
 
    extern const DWORD LetterBox_address;
-   
+
    //rpg_beta6_2
    extern const DWORD Alarm_Control_1_address;
    extern const DWORD Boom_Control_address;
@@ -566,9 +566,9 @@ namespace HCE_Lib
    extern const DWORD LD7_pow_address;
    extern const DWORD LD8_pow_address;
    extern const DWORD LD9_pow_address;
-   
-   
-   
+
+
+
    extern const DWORD Locked_address;
    extern const DWORD Alarmed_address;
    extern const DWORD Nuked_address;

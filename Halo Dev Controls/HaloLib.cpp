@@ -32,11 +32,11 @@ namespace HaloCE_lib
    ADDRESS_SIG Current_map_addr_sig =
    //{ "\x7F\x1F\xB8\x00\x00\x00\x00\x8D\x50", "x?x????xx", 3 }; //Does not work for 1.10 version
    { "\xB8\x64\x30\x64\x00\x8D\x50\x01\x8A\x08\x40\x84\xC9\x75\xF9\x2B\xC2\x83\xF8\x1F", "x????x??xxxxxx?x?xxx", 1 };
-       
+
    ADDRESS_SIG Rider_Eject_addr_sig =
    { "\x04\xA0\xAC\x49\x62\x00\x84\xC0\x0F\x84\x00\x00\x00\x00\x8B\x4D\xEC", "xx????xxxx????xxx", 2 };
-       
-   ADDRESS_SIG Console_addr_sig = 
+
+   ADDRESS_SIG Console_addr_sig =
    { "\x51\xA0\x70\x1F\x65\x00\x84\xC0\x0F\x85\x00\x00\x00\x00\x55\x8B", "xx????xxxx????xx", 2 };
 
    ADDRESS_SIG Base_ptr_addr_sig = //ce1.08 = 0x006BD194 pc1.09 = 0x00721ea4
@@ -45,35 +45,35 @@ namespace HaloCE_lib
    ADDRESS_SIG Cheats_addr_sig =
    { "\x74\x09\x80\x3D\x00\x00\x00\x00\x00", "xxxx????x", 4 };
 
-   ADDRESS_SIG Show_Hud_ptr_addr_sig = 
+   ADDRESS_SIG Show_Hud_ptr_addr_sig =
    { "\x8B\x0D\x00\x00\x00\x00\x85\xC9\x0F\x84\x00\x00\x00\x00\x80", "xx????xxxx????x", 2 };
 
    //offset ptr by 8
    ADDRESS_SIG letterbox_ptr_addr_sig =
    { "\x0F\x84\x00\x00\x00\x00\xA1\x00\x00\x00\x00\x8A\x48", "xx????x????xx", 7 };
-       
-   ADDRESS_SIG Rasterizer_addr_sig = 
+
+   ADDRESS_SIG Rasterizer_addr_sig =
    { "\xA0\xC0\x49\x62\x00\x83\xEC\x0C\x84\xC0\x75\x0E", "x????xxxxxxx", 1 };
-      
+
    ADDRESS_SIG Cinematic_addr_sig =
    { "\x01\x8B\x15\x00\x00\x00\x00\x3B\xD3", "xxx????xx", 3 };
 
    //ADDRESS_SIG ServerType_ptr_addr_sig =
    //{ "\x66\x83\x3D\xD0\x47\x6B\x00\x02\x89\x44\x24\x38", "xxx????xxxxx", 3 };
-      
+
    //offset ptr by 0x18
    ADDRESS_SIG Game_Speed_ptr_addr_sig =
    { "\x8B\xFD\xF3\xAB\xA1\x00\x00\x00\x00\x8B", "xxxxx????x", 5 };
-      
+
    ADDRESS_SIG Grav_Boots_addr_sig =
    { "\x83\xEC\x38\x56\x8B\xF1\xB1\x04", "xxxxxxxx", -6 };
-   
+
    ADDRESS_SIG Time_Freeze_addr_sig =
    { "\xC1\xE0\x10\x0B\xC2\x84\xC9", "xxxxxxx", 7 };
-   
+
    ADDRESS_SIG Rapid_Fire_addr_sig =
    { "\xD9\x81\x34\x02\x00\x00\xEB\x03", "xxxxxxxx", 8 };
-   
+
    ADDRESS_SIG Vehicle_NTR_addr_sig =// change from 0x74 to 0xEB
    { "\x66\x8B\x8E\xB8\x00\x00\x00\x66\x8B\x90\xB8\x00\x00\x00", "xxxxxxxxxxxxxx", 0x15 };
 
@@ -84,9 +84,9 @@ namespace HaloCE_lib
       004AE760  |. 8D9424 2401000>LEA EDX,DWORD PTR SS:[ESP+124]
       004AE767  |. E8 94CC0A00    CALL haloce.0055B400 <-- conjugate strings
       004AE76C  |. 8D8C24 2401000>LEA ECX,DWORD PTR SS:[ESP+124]
-      
+
       004AE773  |. 51             PUSH ECX
-      004AE774  |. E8 57030000    CALL haloce.004AEAD0 
+      004AE774  |. E8 57030000    CALL haloce.004AEAD0
       004AE779  |. 83C4 10        ADD ESP,10 ;2 func's combined; should be 4
       */
    ADDRESS_SIG Local_Chat_func_addr_sig =
@@ -107,7 +107,7 @@ namespace HaloCE_lib
    //MOVSX ECX,BYTE PTR [ESP+1Ch] to get player index for hooking func
    ADDRESS_SIG Local_Chat_hook_addr_sig =
    { "\x50\xE8\x00\x00\x00\x00\x8D\x8C\x24\x00\x00\x00\x00\x51\xE8", "xx????xxx????xx", 2 };
-      
+
    /*004AE06A   E8 B1210400      CALL haloce.004F0220
    004AE06F   84C0             TEST AL,AL
    004AE071   0F84 12010000    JE haloce.004AE189
@@ -117,11 +117,11 @@ namespace HaloCE_lib
    004AE086   0F84 FD000000    JE haloce.004AE189*/
    //add 1 more to the offset for dedicated server
    //add 0x2E to offset for MsgInfo_ptr_address
-   //add 0x37 to offset for PrepMsg_func_address  build network packet function 
+   //add 0x37 to offset for PrepMsg_func_address  build network packet function
    //add 0x3D to offset for ServerInfo_ptr_address
    ADDRESS_SIG Server_Chat_hook_addr_sig =
    { "\x8B\x08\x8B\x11\x81\xEC\x00\x00\x00\x00\x57", "xxxxxx????x", 0x3F };
-   
+
    /*004AE158   83F8 FF          CMP EAX,-1 ;EAX =player index
    004AE15B   74 1A            JE SHORT haloce.004AE177
    004AE15D   6A 03            PUSH 3
@@ -134,10 +134,10 @@ namespace HaloCE_lib
    004AE16D   8BF3             MOV ESI,EBX ;EBX= [6B7384] ServerInfo_ptr_address
    004AE16F   E8 6C6F0300      CALL haloce.004E50E0
    004AE174   83C4 1C          ADD ESP,1C*/
-   
+
    ADDRESS_SIG SendChatMsgToPlayer_func_addr_sig =
    { "\x51\x53\x57\x8B\xF8\x32\xC0\x33\xC9", "xxxxxxxxx", 0 };
-   
+
    /*004AE218   6A 03            PUSH 3
    004AE21A   6A 01            PUSH 1
    004AE21C   57               PUSH EDI ;0
@@ -150,22 +150,22 @@ namespace HaloCE_lib
    //use (address + 4) - *address to get actually address
    ADDRESS_SIG SendChatMsgToAll_func_addr_sig =
    { "\x8B\xC5\xE8\x00\x00\x00\x00\x83\xC4\x18\x5D\x5B", "xxx????xxxxx", 3 };
-   
+
       /*console
       004C9BDD   53               PUSH EBX                  //0
       004C9BDE   BF 28206500      MOV EDI,haloce.00652028   //string
       004C9BE3   E8 58030000      CALL haloce.004C9F40                     ;hook here
       004C9BE8   83C4 04          ADD ESP,4
-      
+
       returns bool (BYTE) succeded
       */
    //used with the console buffer
    ADDRESS_SIG Console_hook_addr_sig =
    { "\x53\xBF\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x83\xC4\x04", "xx????x????xxx", 7 };
-      
+
    ADDRESS_SIG Console_func_addr_sig =
    { "\x8A\x07\x81\xEC\x00\x05\x00\x00\x3C\x3B", "xxxxxxxxxx", 0 };
-   
+
    /*rcon call to console
    004C9F20   6A 00            PUSH 0
    004C9F22   A3 6CDE6400      MOV DWORD PTR DS:[64DE6C],EAX
@@ -173,7 +173,7 @@ namespace HaloCE_lib
    004C9F2C   83C4 04          ADD ESP,4*/
    ADDRESS_SIG Rcon_hook_addr_sig =
    { "\x6A\x00\xA3\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x83\xC4\x04", "xxx????x????xxx", 8 };
-   
+
       /*engine draw text
       004E7291   A1 D8076200      MOV EAX,DWORD PTR DS:[6207D8]   ;ARGB color (float array)
       004E7296   68 E0D06000      PUSH haloce.0060D0E0         ; ASCII "sv_kick:  Can't kick a local client!"
@@ -183,24 +183,24 @@ namespace HaloCE_lib
    //use (address + 4) - *address to get actually address
    ADDRESS_SIG EngineDrawText_func_addr_sig =
    { "\x83\xEC\x10\x57\x8B\xF8\xA0", "xxxxxxx", 0 };
-   
+
    /*0047ED8C   8B00             MOV EAX,DWORD PTR DS:[EAX] ;Player Obj Tag
    0047ED8E   E8 9D050F00      CALL haloce.0056F330
    returns 01 if succeded and > 01 if not*/
    ADDRESS_SIG UnitExitVehicle_func_addr_sig =
    { "\x55\x8B\xEC\x83\xE4\xF8\x81\xEC\x00\x00\x00\x00\x53\x56\x8B\xF0\x83\xC9", "xxxxxxxx????xxxxxx", 0 };
-   
+
    //no paramters
    ADDRESS_SIG SpawnHog_func_addr_sig =
    { "\xA1\x00\x00\x00\x00\x8B\x88\x64\x01\x00\x00\x85\xC9\x57", "x????xxxxxxxxx", 0 };
-   
-   
+
+
    /*[40848BF0+i*10]= vehicle biped tag ptr
    [40848BE4+0C]->E3D40260 (1st one?)
    [40848B44+24]->40848BE4
    [40848198+168]->40848B44
    [6E2280]->40848198
-            
+
     0045B0D9   50               PUSH EAX;00000010 (how many objects to spawn)
     0045B0DA   51               PUSH ECX;408489F4 (ptr to BipdMetaTag)
     0045B0DB   E8 A0020000      CALL haloce.0045B380
@@ -208,20 +208,20 @@ namespace HaloCE_lib
     returns how many objects spawned*/
    ADDRESS_SIG SpawnObjAtPlayer0_func_addr_sig =
    { "\x81\xEC\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x83\xF8\xFF\x0F\x84", "xx????x????xxxxx", 0};
-   
+
    /*0047D411   8BC6             MOV EAX,ESI ;obj tag
    0047D413   E8 48C40700      CALL haloce.004F9860*/
    //add 2 bytes to get address of ptr to object data header
    ADDRESS_SIG DestroyObj_func_addr_sig =
    { "\x8B\x0D\x00\x00\x00\x00\x8B\x51\x34\x57", "xx????xxxx", 0 };
-   
+
    /*0048592C   8B00             MOV EAX,DWORD PTR DS:[EAX] ;EAX char pointer to player index, 1 based
    0048592E   E8 FD180600      CALL haloce.004E7230
    returns bool succeded*/
    //add 3 bytes to get address of ptr to ServerType
    ADDRESS_SIG sv_kick_func_addr_sig =
    { "\x66\x83\x3D\xD0\x47\x6B\x00\x02\x75\x6C\xE8\x61\x06\x00\x00\x85\xC0", "xxx????xx?x????xx", 0 };
-   
+
    /*0048597E   8B4C24 04        MOV ECX,DWORD PTR SS:[ESP+4] ;ECX is struct ptr to ban time "dhms"?
    00485982   8B4424 08        MOV EAX,DWORD PTR SS:[ESP+8] ;EAX is player index (1 based)
    00485986   E8 35190600      CALL haloce.004E72C0
@@ -241,7 +241,7 @@ namespace HaloCE_lib
    //add 2 bytes to get cinematic ptr
    ADDRESS_SIG cse_set_video_func_addr_sig =
    { "\x8B\x15\x00\x00\x00\x00\x56\x33\xF6\x3B\xD6", "xx????xxxxx", 0 };
-   
+
    /*00486A43   68 20634800      PUSH haloce.00486320
    00486A48   6A 04            PUSH 4
    00486A4A   52               PUSH EDX
@@ -257,7 +257,7 @@ namespace HaloCE_lib
    //array size address is -16 bytes from the array index, were the pointer to the array is +4 bytes from the index
    ADDRESS_SIG console_tablist_hook_addr_sig =
    { "\x6A\x04\x52\x55\xE8\x0F\x1E\x14\x00\x66\xA1", "xxxxx????xx", 5 };
-   
+
    /*004869EC   66:8935 00C46400 MOV WORD PTR DS:[64C400],SI;array of strings index
    004869F3   66:890D F0C36400 MOV WORD PTR DS:[64C3F0],CX;array size?
    004869FA   892D 04C46400    MOV DWORD PTR DS:[64C404],EBP;pointer to the array
@@ -268,23 +268,23 @@ namespace HaloCE_lib
    00486A18   BF 60496200      MOV EDI,haloce.00624960 ;pointer to array of functions*/
    ADDRESS_SIG console_tablist_vars_hook_addr_sig =
    { "\x57\x66\x89\x35\x00\xC4\x64\x00\x66\x89\x0D", "xxxx????xxx", 4 };
-   
+
    //[[this address] + 204] = size of name list
    //[[this address] + 208] = ptr to name list
    //ADDRESS_SIG map_info_struct_ptr_addr_sig =
    //{ "\xEB\x14\x8B\x0D\x00\x00\x00\x00\x6B\xD2\x5C", "xxxx????xxx", 4 };
-   
+
    /*0048AAC8   8BCE            MOV ECX,ESI ;fast call, ecx = scripted obj index
    0048AACA   5E              POP ESI
    0048AACB   E9 30050700     JMP haloce.004FB000*/
    //add 1 to get map_info_struct_ptr address
    ADDRESS_SIG CreateScriptedObj_func_addr_sig =
    { "\xA1\x00\x00\x00\x00\x8B\x90\x08\x02\x00\x00", "x????xxxxxx", 0 };
-   
+
    //[this address] = ptr to scripted obj tags     DWORD obj_tags[size]
    ADDRESS_SIG scripted_objtags_ptr_addr_sig =
    { "\x7D\x09\x8B\x35\x00\x00\x00\x00\x89\x0C\x86", "xxxx????xxx", 4 };
-   
+
    /*0045B4FB   33C0             XOR EAX,EAX
    0045B4FD   50               PUSH EAX ;unknown
    0045B4FE   8D5424 44        LEA EDX,DWORD PTR SS:[ESP+44]
@@ -295,7 +295,7 @@ namespace HaloCE_lib
     returns new obj tag*/
    ADDRESS_SIG CreateObject_func_addr_sig =
    { "\x81\xEC\x1C\x02\x00\x00\x8B\x0D\x00\x00\x00\x00\x53\x55", "xxxxxxxx????xx", 0 };
-   
+
    /*0047C7C4   8B6C24 14        MOV EBP,DWORD PTR SS:[ESP+14]
    0047C7C8   8B5C24 14        MOV EBX,DWORD PTR SS:[ESP+14] ;static player tag
    0047C7CC   50               PUSH EAX ;durration = 30 * secs
@@ -304,7 +304,7 @@ namespace HaloCE_lib
    0047C7D3   83C4 08          ADD ESP,8*/
    ADDRESS_SIG ActiveCamo_func_addr_sig =
    { "\x83\xFB\xFF\x55\x8B\x6C\x24\x08\x56\x57", "xxxxxxxxxx", 0 };
-   
+
    /*004646F1   8BD8             MOV EBX,EAX ;static player tag
    004646F3   A1 44CD6800      MOV EAX,DWORD PTR DS:[68CD44]
    004646F8   85C0             TEST EAX,EAX
@@ -316,7 +316,7 @@ namespace HaloCE_lib
    0046470E   83C4 04          ADD ESP,4*/
    ADDRESS_SIG PlayerDeath_func_addr_sig =
    { "\x51\x83\xFB\xFF\x55\x8B\x6C\x24\x0C", "xxxxxxxxx", 0 };
-   
+
    namespace Console
    {
       const BYTE Check_offset = 0;
@@ -325,7 +325,7 @@ namespace HaloCE_lib
       const WORD C_Buffers_offset = 0x1C4;
       const WORD C_Buffers_index_offset = 0x9BE;
    }
-   
+
    namespace RasterizerEx
    {
       const BYTE FPS_offset = 0;
@@ -333,13 +333,13 @@ namespace HaloCE_lib
       const BYTE FogAtmosphere_offset = 0x27;
       const BYTE FogPlane_offset = 0x28;
    }
-   
+
    namespace Cinematic
    {
       const BYTE Marine_View_f_offset = 0x23;
       const BYTE screen_effect_start_offset = 0x38;
    }
-   
+
    //for external processes
    namespace CheatsEx
    {
@@ -354,33 +354,33 @@ namespace HaloCE_lib
       const BYTE Controller_offset = 8;
       const BYTE Bottomless_Clip_offset = 9;
    }
-   
+
    const short PlayerNameMaxSize = 12;
-   
+
    // [Animation Trigger]
    ADDRESS_SIG AnimTriggers_ptr_sig =
    { "\x8B\x0A\x8B\x15\x00\x00\x00\x00\x81\xE1", "xxxx????xx", 4 };
-   
+
    ADDRESS_SIG Camera_Data_ptr_addr_sig =
    { "\x8D\x9B\x00\x00\x00\x00\xB9\x1A\x00\x00\x00", "xx????xxxxx", 2 };
 
    ADDRESS_SIG Local_Player_ptr_addr_sig =
    { "\x8B\x0D\x00\x00\x00\x00\x8D\x54\x24\x04", "xx????xxxx", 2 };
-   
+
    //use DestroyObj_func_addr_sig + 2
    //ADDRESS_SIG Object_ptr_sig =
    //{ "\x8B\x45\x18\x8B\x0D\x00\x00\x00\x00\x8B\x51\x34", "xxxxx????xxx", 5 };
-   
+
    ADDRESS_SIG Device_Groups_ptr_sig = //ce 815DB0 pc 87A870
    { "\x66\x83\xF9\xFF\xA1\x00\x00\x00\x00\x74", "xxxxx????x", 5 };
-      
+
    ADDRESS_SIG Players_ptr_sig =
    { "\xBA\x04\x8B\x15\x00\x00\x00\x00\x25", "xxxx????x", 4 };
-   
-   ADDRESS_SIG HS_Globals_ptr_sig = 
+
+   ADDRESS_SIG HS_Globals_ptr_sig =
    { "\x83\xC4\x10\x85\xC9\xA3\x00\x00\x00\x00\x5B", "xxxxxx????x", 6 };
-   
-   ADDRESS_SIG Object_List_Header_ptr_sig = 
+
+   ADDRESS_SIG Object_List_Header_ptr_sig =
    { "\xA1\x00\x00\x00\x00\x8B\x70\x34\x8B\xD3", "x????xxxxx", 1 };
 }
 
@@ -393,7 +393,7 @@ namespace Halo_Lib
    const DWORD Deathless_address = 0x87A840;//byte
    const DWORD Infinite_Ammo_address = 0x87A842;//byte
    const DWORD Bottomless_address = 0x87A849;//byte
-   
+
    const DWORD ObjectTableHeader_ptr_address = 0x00860030;
    const DWORD StaticPlayerHeader_ptr_address = 0x0087A100;
    */
@@ -424,7 +424,7 @@ namespace HCE_Lib
       const WORD lock_timer_offset = 0xFAC;
       const WORD boom_timer_offset = 0xFB4;
    }
-   
+
    namespace rpg_beta6_2_device_groups
    {
       const DWORD alarm_control_1_offset = 0x55C;
@@ -434,21 +434,21 @@ namespace HCE_Lib
       const DWORD alarm_control_4_offset = 0x59C;
       const DWORD lock_control_offset = 0x5AC;
    }
-   
+
    /*
    const DWORD Rider_Eject_address = 0x006249AC;//byte
    const DWORD Rasterizer_FPS_address = 0x006249C0;//byte
    const DWORD WireFrame_address = 0x006249C6;//byte
    const DWORD FogAtmosphere_address = 0x006249E7;//byte
    const DWORD FogPlane_address = 0x006249E8;//byte
-   
+
    const DWORD Dev_address = 0x006BD17E;//byte
-   
-      
+
+
    //halo ce 1.09, 0xE8 offset fro, 1.08
    const DWORD Console_Check_address = 0x00651F70;//byte
    const DWORD Console_address = 0x00651F71;//byte
-   
+
    00651FF8 console color->alpha
    00651FFC console color->red
    00652000 console color->green
@@ -466,18 +466,18 @@ namespace HCE_Lib
    const DWORD C_Buffer_address6 = 0x0065262F;
    const DWORD C_Buffer_address7 = 0x0065272E;
    const DWORD C_Buffer_address8 = 0x0065282D;
-   
+
    const DWORD Current_Map_address = 0x00643084;//string
 
    //active camo offsets
    //0x34, eax*4+08, 0x204
-   
+
    //game speed 0x40000300
    //0x400002E8 + 0x18
    //004856AE - 8B 15 90CD6800             - mov edx,[0068CD90] : [400002E8]
    //004856B4 - 89 4A 18                   - mov [edx+18],ecx
    const DWORD Game_Speed_ptr_address = 0x0068CD90;//float
-   
+
    const DWORD Deathless_address = 0x00815D80;//byte  64AC0
    const DWORD JetPack_address = 0x00815D81;//byte
    const DWORD Infinite_Ammo_address = 0x00815D82;//byte
@@ -494,13 +494,13 @@ namespace HCE_Lib
    //00714E7C //00712542
    const DWORD Rcon_Pass_address = 0x006B74C0;//string
    const DWORD Edit_Name_Buffer = 0x006AFF2A;//11 character unicode string
-   
+
    const DWORD Local_Player_ptr_address = 0x0064C3AC;
-   
+
    @t@d header ptrs:
-   
+
    terminal output 0064DE50 (aka console)
-   
+
    pc texture
    pc texture cache
    pc sound
@@ -511,7 +511,7 @@ namespace HCE_Lib
    terminal output
    weather particles
    const DWORD Update_Server_Queues_ptr_address = 0x0068CDB0
-   
+
    cached object render states
    widget
    flag
@@ -554,9 +554,9 @@ namespace HCE_Lib
    const DWORD HS_Globals_ptr_address = 0x008155AC;
    const DWORD Recorded_Animations_ptr_address = 0x0064B960;
    const DWORD Script_Node_ptr_address = 0x008155B4;
-   
+
    const DWORD Server_chat_address = 0x404D2239;
-   
+
    //marine view
    const DWORD Marine_View_f_address = 0x4000017F;//byte
    const DWORD MV_fparameter2_address = 0x40000188;//float
@@ -564,13 +564,13 @@ namespace HCE_Lib
    //005DC933 - 50                         - push eax
    //005DC934 - 53                         - push ebx
    //005DC935 - E8 D5D0FEFF                - call 005C9A0F
-   
+
    //pointer 006B827C + 0x38
    const DWORD Cinematic_address = 0x40000194;//byte
    const DWORD Show_Hud_address = 0x400003BC;//byte
 
    const DWORD LetterBox_address = 0x403FD678;//byte
- 
+
    //rpg_beta6_2
    const DWORD Alarm_Control_1_address = 0x40027164;//float
    const DWORD Boom_Control_address = 0x40027174;//float
@@ -600,7 +600,7 @@ namespace HCE_Lib
    const DWORD LD7_pow_address = 0x4008FC68;//float
    const DWORD LD8_pow_address = 0x4008FF44;//float
    const DWORD LD9_pow_address = 0x40090254;//float
-   
+
    const DWORD Locked_address = 0x403FACBC;//bool
    const DWORD Alarmed_address = 0x403FACC4;//bool
    const DWORD Nuked_address = 0x403FACCC;//bool

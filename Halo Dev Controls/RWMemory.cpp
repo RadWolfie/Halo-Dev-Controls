@@ -59,7 +59,7 @@ namespace ReadWriteMemoryTools
                match = false;
                break;
             }
-            
+
             i++;
          }while(_char1 && _char2);
       }
@@ -117,7 +117,7 @@ namespace ReadWriteMemoryTools
                match = false;
                break;
             }
-            
+
             i++;
          }while(_wchar1 && _wchar2);
       }
@@ -129,39 +129,39 @@ namespace ReadWriteMemoryTools
    {
       P = NULL;
       P = new tagPROCESSENTRY32W; LastWin32Error = 0;
-      std::vector<tagPROCESSENTRY32W> process =  
+      std::vector<tagPROCESSENTRY32W> process =
          GetProcessesByNameW(process_name);
 
       //to prevent array out of bounds error when the process is killed
       if (!process.empty())
          *P = process[process_to_use];
-       
+
       hProcess = ::OpenProcess(
-         PROCESS_CREATE_THREAD | 
-         PROCESS_QUERY_INFORMATION | 
-         PROCESS_VM_OPERATION | 
-         PROCESS_VM_WRITE | 
-         PROCESS_VM_READ, 
-         false, 
+         PROCESS_CREATE_THREAD |
+         PROCESS_QUERY_INFORMATION |
+         PROCESS_VM_OPERATION |
+         PROCESS_VM_WRITE |
+         PROCESS_VM_READ,
+         false,
          P->th32ProcessID
          );
-      
+
       if (!hProcess)
       {
          LastWin32Error = ::GetLastError();
          //if this is spamming messageboxes, disable timer first
          //then re-enable after messagebox returns
-         wchar_t Message[27 + HEXNUM_LENGTH] = 
+         wchar_t Message[27 + HEXNUM_LENGTH] =
          {
             'O','p','e','n','P','r','o','c','e','s','s',':',' ',
             'E','r','r','o','r',' ','C','o','d','e',':',' ','0','x'
          };
          ::swprintf_s(&Message[27], HEXNUM_LENGTH, L"%lX", LastWin32Error);
-         
+
          ::MessageBoxW(
-            NULL, 
-            Message, 
-            L"Error", 
+            NULL,
+            Message,
+            L"Error",
             MB_OK | MB_ICONWARNING | MB_TASKMODAL
             );
       }
@@ -170,73 +170,73 @@ namespace ReadWriteMemoryTools
    RWMemory::RWMemory(DWORD process_id)
    {
       P = NULL;
-      P = new tagPROCESSENTRY32W(GetProcessByID_W(process_id)); 
+      P = new tagPROCESSENTRY32W(GetProcessByID_W(process_id));
       LastWin32Error = 0;
 
       hProcess = ::OpenProcess(
-         PROCESS_CREATE_THREAD | 
-         PROCESS_QUERY_INFORMATION | 
-         PROCESS_VM_OPERATION | 
-         PROCESS_VM_WRITE | 
-         PROCESS_VM_READ, 
-         false, 
+         PROCESS_CREATE_THREAD |
+         PROCESS_QUERY_INFORMATION |
+         PROCESS_VM_OPERATION |
+         PROCESS_VM_WRITE |
+         PROCESS_VM_READ,
+         false,
          P->th32ProcessID
          );
-         
+
       if (!hProcess)
       {
          LastWin32Error = ::GetLastError();
-         wchar_t Message[27 + HEXNUM_LENGTH] = 
+         wchar_t Message[27 + HEXNUM_LENGTH] =
          {
             'O','p','e','n','P','r','o','c','e','s','s',':',' ',
             'E','r','r','o','r',' ','C','o','d','e',':',' ','0','x'
          };
          ::swprintf_s(&Message[27], HEXNUM_LENGTH, L"%lX", LastWin32Error);
-         
+
          ::MessageBoxW(
-            NULL, 
-            Message, 
-            L"Error", 
+            NULL,
+            Message,
+            L"Error",
             MB_OK | MB_ICONWARNING | MB_TASKMODAL
             );
       }
    }
-   
+
    RWMemory::RWMemory(tagPROCESSENTRY32W process)
    {
       P = NULL;
       P = new tagPROCESSENTRY32W(process);
       LastWin32Error = 0;
-      
+
       hProcess = ::OpenProcess(
-         PROCESS_CREATE_THREAD | 
-         PROCESS_QUERY_INFORMATION | 
-         PROCESS_VM_OPERATION | 
-         PROCESS_VM_WRITE | 
-         PROCESS_VM_READ, 
-         false, 
+         PROCESS_CREATE_THREAD |
+         PROCESS_QUERY_INFORMATION |
+         PROCESS_VM_OPERATION |
+         PROCESS_VM_WRITE |
+         PROCESS_VM_READ,
+         false,
          P->th32ProcessID
          );
-         
+
       if (!hProcess)
       {
          LastWin32Error = ::GetLastError();
-         wchar_t Message[27 + HEXNUM_LENGTH] = 
+         wchar_t Message[27 + HEXNUM_LENGTH] =
          {
             'O','p','e','n','P','r','o','c','e','s','s',':',' ',
             'E','r','r','o','r',' ','C','o','d','e',':',' ','0','x'
          };
          ::swprintf_s(&Message[27], HEXNUM_LENGTH, L"%lX", LastWin32Error);
-         
+
          ::MessageBoxW(
-            NULL, 
-            Message, 
-            L"Error", 
+            NULL,
+            Message,
+            L"Error",
             MB_OK | MB_ICONWARNING | MB_TASKMODAL
             );
       }
    }
-   
+
    RWMemory::~RWMemory()
    {
       if (P)
@@ -244,7 +244,7 @@ namespace ReadWriteMemoryTools
          delete P;
          P = NULL;
       }
-         
+
       if (hProcess)
       {
          if (! ::CloseHandle(hProcess))
@@ -253,23 +253,23 @@ namespace ReadWriteMemoryTools
       }
    }
    #pragma endregion
-   
+
    std::vector<tagPROCESSENTRY32> RWMemory::GetProcessesA()
    {
       tagPROCESSENTRY32 pe32;
       std::vector<tagPROCESSENTRY32> pe32_list;
       //DWORD lpBinaryType = 0;
-      
+
       try
       {
          // Take a snapshot of all processes in the system.
-         HANDLE hProcessSnap = 
+         HANDLE hProcessSnap =
             ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
          if (hProcessSnap != INVALID_HANDLE_VALUE)
          {
             // Set the size of the structure before using it.
             pe32.dwSize = sizeof(tagPROCESSENTRY32);
-            
+
             if (::Process32First(hProcessSnap, &pe32))
             {
                do
@@ -281,31 +281,31 @@ namespace ReadWriteMemoryTools
                   while (::Process32Next(hProcessSnap, &pe32));
             }
          }
-         
+
          ::CloseHandle(hProcessSnap);
       }
       catch(...) {}
-      
+
 
       return pe32_list;
    }
-   
+
    std::vector<PROCESSENTRY32W> RWMemory::GetProcessesW()
    {
       tagPROCESSENTRY32W pe32;
       std::vector<tagPROCESSENTRY32W> pe32_list;
       //DWORD lpBinaryType = 0;
-      
+
       try
       {
          // Take a snapshot of all processes in the system.
-         HANDLE hProcessSnap = 
+         HANDLE hProcessSnap =
             ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
          if (hProcessSnap != INVALID_HANDLE_VALUE)
          {
             // Set the size of the structure before using it.
             pe32.dwSize = sizeof(tagPROCESSENTRY32W);
-            
+
             if (::Process32FirstW(hProcessSnap, &pe32))
             {
                do
@@ -317,11 +317,11 @@ namespace ReadWriteMemoryTools
                   while (::Process32NextW(hProcessSnap, &pe32));
             }
          }
-         
+
          ::CloseHandle(hProcessSnap);
       }
       catch(...) {}
-      
+
 
       return pe32_list;
    }
@@ -330,29 +330,29 @@ namespace ReadWriteMemoryTools
       char* process_name)
    {
       std::vector<tagPROCESSENTRY32> pe32_list = GetProcessesA(), processes;
-      
+
       DWORD pe32_list_size = pe32_list.size();
       for (DWORD pe32_i = 0; pe32_i < pe32_list_size; pe32_i++)
       {
          if (str_cmpA(process_name, pe32_list[pe32_i].szExeFile))
-            processes.push_back(pe32_list[pe32_i]); 
+            processes.push_back(pe32_list[pe32_i]);
       }
-      
+
       return processes;
    }
-   
+
    std::vector<tagPROCESSENTRY32W> RWMemory::GetProcessesByNameW(
       wchar_t* process_name)
    {
       std::vector<tagPROCESSENTRY32W> pe32_list = GetProcessesW(), processes;
-      
+
       DWORD pe32_list_size = pe32_list.size();
       for (DWORD pe32_i = 0; pe32_i < pe32_list_size; pe32_i++)
       {
          if (str_cmpW(process_name, pe32_list[pe32_i].szExeFile))
-            processes.push_back(pe32_list[pe32_i]); 
+            processes.push_back(pe32_list[pe32_i]);
       }
-      
+
       return processes;
    }
 
@@ -360,7 +360,7 @@ namespace ReadWriteMemoryTools
    {
       std::vector<tagPROCESSENTRY32> pe32_list = GetProcessesA();
       tagPROCESSENTRY32 process;
-      
+
       process.dwSize = 0;//test if this is still zero before using
       DWORD pe32_list_size = pe32_list.size();
       for (unsigned int pe32_i = 0; pe32_i < pe32_list_size; pe32_i++)
@@ -371,15 +371,15 @@ namespace ReadWriteMemoryTools
             break;
          }
       }
-      
+
       return process;
    }
-   
+
    tagPROCESSENTRY32W RWMemory::GetProcessByID_W(DWORD process_ID)
    {
       std::vector<tagPROCESSENTRY32W> pe32_list = GetProcessesW();
       tagPROCESSENTRY32W process;
-      
+
       process.dwSize = 0;//test if this is still zero before using
       DWORD pe32_list_size = pe32_list.size();
       for (unsigned int pe32_i = 0; pe32_i < pe32_list_size; pe32_i++)
@@ -390,27 +390,27 @@ namespace ReadWriteMemoryTools
             break;
          }
       }
-      
+
       return process;
    }
-   
+
    std::vector<tagMODULEENTRY32> RWMemory::GetProcessModulesA()
    {
       tagMODULEENTRY32 me32;
       std::vector<tagMODULEENTRY32> me32_list;
-      
+
       try
       {
          // Take a snapshot of all modules in the process.
          HANDLE hModuleSnap = ::CreateToolhelp32Snapshot(
-            TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, 
+            TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32,
             P->th32ProcessID
             );
          if (hModuleSnap != INVALID_HANDLE_VALUE)
          {
             // Set the size of the structure before using it.
             me32.dwSize = sizeof(tagMODULEENTRY32);
-            
+
             if (::Module32First(hModuleSnap, &me32))
             {
                do
@@ -422,32 +422,32 @@ namespace ReadWriteMemoryTools
          }
          else
             LastWin32Error = ::GetLastError();
-         
+
          if (!::CloseHandle(hModuleSnap))
             LastWin32Error = ::GetLastError();
       }
       catch(...) {}
-      
+
       return me32_list;
    }
-   
+
    std::vector<tagMODULEENTRY32W> RWMemory::GetProcessModulesW()
    {
       tagMODULEENTRY32W me32;
       std::vector<tagMODULEENTRY32W> me32_list;
-      
+
       try
       {
          // Take a snapshot of all modules in the process.
          HANDLE hModuleSnap = ::CreateToolhelp32Snapshot(
-            TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, 
+            TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32,
             P->th32ProcessID
             );
          if (hModuleSnap != INVALID_HANDLE_VALUE)
          {
             // Set the size of the structure before using it.
             me32.dwSize = sizeof(tagMODULEENTRY32W);
-            
+
             if (::Module32FirstW(hModuleSnap, &me32))
             {
                do
@@ -459,21 +459,21 @@ namespace ReadWriteMemoryTools
          }
          else
             LastWin32Error = ::GetLastError();
-         
+
          if (!::CloseHandle(hModuleSnap))
             LastWin32Error = ::GetLastError();
       }
       catch(...) {}
-      
+
       return me32_list;
    }
 
    tagMODULEENTRY32 RWMemory::GetProcessModuleByNameA(
       char* module_name)
    {
-      std::vector<tagMODULEENTRY32> me32_list = GetProcessModulesA(); 
+      std::vector<tagMODULEENTRY32> me32_list = GetProcessModulesA();
       tagMODULEENTRY32 module;
-      
+
       module.dwSize = 0;//test if this is still zero before using
       DWORD me32_list_size = me32_list.size();
       for (unsigned int me32_i = 0; me32_i < me32_list_size; me32_i++)
@@ -484,16 +484,16 @@ namespace ReadWriteMemoryTools
             break;
          }
       }
-      
+
       return module;
    }
-   
+
    tagMODULEENTRY32W RWMemory::GetProcessModuleByNameW(
       wchar_t* module_name)
    {
       std::vector<tagMODULEENTRY32W> me32_list = GetProcessModulesW();
       tagMODULEENTRY32W module;
-      
+
       module.dwSize = 0;//test if this is still zero before using
       DWORD me32_list_size = me32_list.size();
       for (unsigned int me32_i = 0; me32_i < me32_list_size; me32_i++)
@@ -504,7 +504,7 @@ namespace ReadWriteMemoryTools
             break;
          }
       }
-      
+
       return module;
    }
 
@@ -518,13 +518,13 @@ namespace ReadWriteMemoryTools
       //Offset to PE sig
       DWORD PE_sig_offset = ReadMem<DWORD>((LPVOID)(
          (ULONG_PTR)hModule + FIELD_OFFSET(IMAGE_DOS_HEADER, e_lfanew)));
-      
+
       WORD num_of_sections = ReadMem<WORD>((LPVOID)(
          //offset to NumberOfSections
-         (ULONG_PTR)hModule + PE_sig_offset + 
+         (ULONG_PTR)hModule + PE_sig_offset +
             FIELD_OFFSET(IMAGE_NT_HEADERS32, FileHeader) +
             FIELD_OFFSET(IMAGE_FILE_HEADER, NumberOfSections)));
-         
+
       //add the rest of the PE header size and base of module
       ULONG_PTR sections = (ULONG_PTR)hModule + PE_sig_offset ;
 
@@ -532,78 +532,78 @@ namespace ReadWriteMemoryTools
          sections += sizeof(IMAGE_NT_HEADERS64);
       else
          sections += sizeof(IMAGE_NT_HEADERS32);
-         
+
       for (int i = 0; i < num_of_sections; i++)
       {
          int sect_index = i * sizeof(IMAGE_SECTION_HEADER);
-         
+
          BYTE buffer[IMAGE_SIZEOF_SHORT_NAME] = {0};
          ReadMemArray<BYTE>(
-            (LPVOID)(sections + sect_index), 
-            buffer, 
+            (LPVOID)(sections + sect_index),
+            buffer,
             IMAGE_SIZEOF_SHORT_NAME);
-            
+
          if (str_cmpA((char*)SectionName,(char*)buffer, IMAGE_SIZEOF_SHORT_NAME))
          {
             Section_Address = (ULONG_PTR)hModule + ReadMem<DWORD>((LPVOID)(
-               sections + sect_index + 
+               sections + sect_index +
                   FIELD_OFFSET(IMAGE_SECTION_HEADER, VirtualAddress)));
-               
+
             Section_Size = ReadMem<DWORD>((LPVOID)(
-               sections + sect_index + 
+               sections + sect_index +
                   RTL_FIELD_SIZE(IMAGE_SECTION_HEADER, Name)));
             break;
-         } 
+         }
       }
    }
-         
+
    LPVOID RWMemory::GetRemoteProcAddress(HMODULE hModule, LPCSTR lpProcName, bool x64_module)
    {
       char func_name[64]; WORD func_index = 0; ULONG_PTR func_address = NULL;
-      
+
       /*using defined data structs method to get Export Table address offset
       IMAGE_DOS_HEADER *IDH = (IMAGE_DOS_HEADER*)hModule;
       IMAGE_NT_HEADERS *INH = (IMAGE_NT_HEADERS*)(hModule + IDH->e_lfanew);
       IMAGE_EXPORT_DIRECTORY *IED = (IMAGE_EXPORT_DIRECTORY*)(
          hModule + INH->OptionalHeader.DataDirectory[0].VirtualAddress);
       */
-      
+
       DWORD PE_sig_offset = ReadMem<DWORD>(//IMAGE_DOS_HEADER->e_lfanew
          (LPVOID)((ULONG_PTR)hModule + FIELD_OFFSET(IMAGE_DOS_HEADER, e_lfanew))
          );
-         
+
       //IMAGE_NT_HEADERS->OptionalHeader.DataDirectory[0].VirtualAddress
       DWORD offset_to_ET = RTL_FIELD_SIZE(IMAGE_NT_HEADERS, Signature) +
          RTL_FIELD_SIZE(IMAGE_NT_HEADERS, FileHeader);
-      
+
       if (x64_module)
          offset_to_ET += FIELD_OFFSET(IMAGE_OPTIONAL_HEADER64, DataDirectory);
       else
          offset_to_ET += FIELD_OFFSET(IMAGE_OPTIONAL_HEADER32, DataDirectory);
-         
+
       DWORD Export_Table_offset = ReadMem<DWORD>(
          (LPVOID)((ULONG_PTR)hModule + (ULONG_PTR)PE_sig_offset + offset_to_ET)
          );
-            
+
      ::IMAGE_EXPORT_DIRECTORY IED = ReadMem< ::IMAGE_EXPORT_DIRECTORY>(
          (LPVOID)((ULONG_PTR)hModule + Export_Table_offset)
          );
-     
+
       bool found = false;
       if ((DWORD)lpProcName >> 16 != 0)
       {
          for (DWORD name_i = 0; name_i < IED.NumberOfNames && !found; name_i++)
          {
             DWORD str_offset = ReadMem<DWORD>(
-               (LPVOID)((ULONG_PTR)hModule + IED.AddressOfNames 
+               (LPVOID)((ULONG_PTR)hModule + IED.AddressOfNames
                   + (name_i * sizeof(DWORD)))
                );
-               
+
             ReadMemString((LPVOID)((ULONG_PTR)hModule + str_offset), func_name);
-            
+
             if (str_cmpA((char*)lpProcName, (char*)func_name))
             {
-               func_index = ReadMem<WORD>((LPVOID)((ULONG_PTR)hModule 
+               func_index = ReadMem<WORD>((LPVOID)((ULONG_PTR)hModule
                + IED.AddressOfNameOrdinals + (name_i * sizeof(WORD))));
                found = true;
             }
@@ -614,25 +614,25 @@ namespace ReadWriteMemoryTools
          func_index = (WORD)((DWORD)lpProcName - IED.Base);
          found = true;
       }
-         
+
       if (found)
          func_address = (ULONG_PTR)hModule + ReadMem<DWORD>((LPVOID)(
-            (ULONG_PTR)hModule + IED.AddressOfFunctions 
+            (ULONG_PTR)hModule + IED.AddressOfFunctions
             + (func_index * sizeof(DWORD))));
-      
+
       return (LPVOID)func_address;
    }
-   
+
    ULONG_PTR RWMemory::FindMemPattern(
-      ULONG_PTR MemoryAddress, 
-      SIZE_T Len, 
-      BYTE *Pattern, 
+      ULONG_PTR MemoryAddress,
+      SIZE_T Len,
+      BYTE *Pattern,
       const char* Mask)
    {
-      ULONG_PTR PatterAddress = 0; 
+      ULONG_PTR PatterAddress = 0;
       BYTE* buffer = new BYTE[Len]();
       ReadMemArray<BYTE>((LPVOID)MemoryAddress, buffer, Len);
-      
+
       for(ULONG_PTR i = 0; i < Len && !PatterAddress; i++)
       {
          //while Mask[i2] isnt the null terminator
@@ -649,11 +649,11 @@ namespace ReadWriteMemoryTools
                PatterAddress = MemoryAddress + i;
          }
       }
-      
+
       delete[] buffer;
       return PatterAddress;
    }
-   
+
    bool RWMemory::ReadMemString(LPVOID MemoryAddress, char str[])
    {
       bool succeded = true; SIZE_T BytesRead;
@@ -662,21 +662,21 @@ namespace ReadWriteMemoryTools
       do
       {
          if (!::ReadProcessMemory(
-            hProcess, 
-            (LPVOID)((ULONG_PTR)MemoryAddress + (i * sizeof(char))), 
-            &str[i], 
-            sizeof(char), 
+            hProcess,
+            (LPVOID)((ULONG_PTR)MemoryAddress + (i * sizeof(char))),
+            &str[i],
+            sizeof(char),
             &BytesRead))
          {
             LastWin32Error = ::GetLastError();
             succeded = false;
          }
-            
+
       }while(str[i++] != 0);
-         
+
       return succeded;
    }
-    
+
    bool RWMemory::ReadMemString(LPVOID MemoryAddress, wchar_t str[])
    {
       bool succeded = true; SIZE_T BytesRead;
@@ -685,31 +685,31 @@ namespace ReadWriteMemoryTools
       do
       {
          if (!::ReadProcessMemory(
-            hProcess, 
-            (LPVOID)((ULONG_PTR)MemoryAddress + (i * sizeof(wchar_t))), 
-            &str[i], sizeof(wchar_t), 
+            hProcess,
+            (LPVOID)((ULONG_PTR)MemoryAddress + (i * sizeof(wchar_t))),
+            &str[i], sizeof(wchar_t),
             &BytesRead))
          {
             LastWin32Error = ::GetLastError();
             succeded = false;
          }
-            
+
       }while(str[i++] != 0);
-         
+
       return succeded;
    }
-     
+
    bool RWMemory::WriteMemString(LPVOID MemoryAddress, const char* str)
    {
       bool succeeded = true; SIZE_T BytesWritten;
-      
+
       //c string length
       int length = 0; while(str[length++]);
-      
+
       if (!::WriteProcessMemory(
-         hProcess, 
-         MemoryAddress, 
-         (void*)str, length * sizeof(char), 
+         hProcess,
+         MemoryAddress,
+         (void*)str, length * sizeof(char),
          &BytesWritten))
       {
          LastWin32Error = ::GetLastError();
@@ -718,18 +718,18 @@ namespace ReadWriteMemoryTools
 
       return succeeded;
    }
-   
+
    bool RWMemory::WriteMemString(LPVOID MemoryAddress, const wchar_t* str)
    {
       bool succeeded = true; SIZE_T BytesWritten;
-      
+
       //c string length
       int length = 0; while(str[length++]);
-      
+
       if (!::WriteProcessMemory(
-         hProcess, 
-         MemoryAddress, 
-         (void*)str, length * sizeof(wchar_t), 
+         hProcess,
+         MemoryAddress,
+         (void*)str, length * sizeof(wchar_t),
          &BytesWritten))
       {
          LastWin32Error = ::GetLastError();
@@ -738,26 +738,26 @@ namespace ReadWriteMemoryTools
 
       return succeeded;
    }
-   
+
    bool RWMemory::WriteMemJMP(
-      LPVOID JMPLocMemAddress, 
-      LPVOID JMPToMemAddress, 
+      LPVOID JMPLocMemAddress,
+      LPVOID JMPToMemAddress,
       BYTE size)
    {
       bool succeeded = false;
       BYTE* bytes = new BYTE[size]();
-      ULONG_PTR JMP_to_code = (ULONG_PTR)JMPToMemAddress 
+      ULONG_PTR JMP_to_code = (ULONG_PTR)JMPToMemAddress
          - ((ULONG_PTR)JMPLocMemAddress + 5);
-      
+
       bytes[0] = 0xE9;//JMP
       TO_BYTES(UINT_PTR, &bytes[1], JMP_to_code);
-      
+
       for (BYTE i = 5; i < size; i++)
          bytes[i] = 0x90;//NOP
-      
+
       if (WriteMemArray<BYTE>(JMPLocMemAddress, bytes, size))
          succeeded = true;
-         
+
       delete[] bytes;
       return succeeded;
    }
@@ -765,8 +765,8 @@ namespace ReadWriteMemoryTools
    LPVOID RWMemory::AllocateMemory(SIZE_T size)
    {
       LPVOID address_of_alloc = ::VirtualAllocEx(
-         hProcess, 
-         NULL, 
+         hProcess,
+         NULL,
          size,
          MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE
          );
@@ -791,12 +791,12 @@ namespace ReadWriteMemoryTools
    ULONG_PTR RWMemory::CallRemoteFunction(
       LPTHREAD_START_ROUTINE lpStartAddress,
       DWORD call_type,
-      ULONG_PTR *lpParameters, 
+      ULONG_PTR *lpParameters,
       DWORD num_of_params
       )
    {
-      int size; BYTE *asmfunc; ULONG_PTR asmfunc_loc = NULL; 
-      
+      int size; BYTE *asmfunc; ULONG_PTR asmfunc_loc = NULL;
+
       //x86 calls
       if (call_type != __X64FASTCALL)
       {
@@ -814,9 +814,9 @@ namespace ReadWriteMemoryTools
             //failed again
             if (!asmfunc_loc) return NULL;
          }
-         
+
          asmfunc = new BYTE[size]();
-         
+
          /* asmfunc x86 template
            ?68 xxxxxxxx    //push xxxxxxxx      parameters?
             ...
@@ -827,64 +827,64 @@ namespace ReadWriteMemoryTools
             A3 xxxxxxxx    //mov  [xxxxxxxx],eax
             C3             //ret
          */
-         
-         int byte_loc = 0;               
+
+         int byte_loc = 0;
          int pushed_params = num_of_params;
          if (call_type == __FASTCALL)
             pushed_params -= 2;
          else if (call_type == __THISCALL)
             pushed_params--;
-         
+
          //write the parameters in the function
          for (int param_i = 0; param_i < pushed_params; param_i++)
          {
             asmfunc[byte_loc++] = 0x68;         //push param@i
             TO_BYTES(
                DWORD,
-               &asmfunc[byte_loc], 
+               &asmfunc[byte_loc],
                lpParameters[num_of_params - 1 - param_i]);
-               
+
             byte_loc += sizeof(DWORD);
          }
-         
+
          if (call_type == __FASTCALL && num_of_params > 1)
          {
             asmfunc[byte_loc++] = 0xBA;         //mov edx,xxxxxxxx
             TO_BYTES(DWORD, &asmfunc[byte_loc], lpParameters[1]);
-               
+
             byte_loc += sizeof(DWORD);
          }
-         
-         if (call_type == __FASTCALL && num_of_params > 0 
+
+         if (call_type == __FASTCALL && num_of_params > 0
             || call_type == __THISCALL)
          {
             asmfunc[byte_loc++] = 0xB9;         //mov ecx,xxxxxxxx
             TO_BYTES(DWORD, &asmfunc[byte_loc], lpParameters[0]);
             byte_loc += sizeof(DWORD);
          }
-         
+
          //calculate destination function offset
          asmfunc[byte_loc++] = 0xE8;            //call <function address>
          TO_BYTES(
-            DWORD, 
+            DWORD,
             &asmfunc[byte_loc],
             (DWORD)lpStartAddress - ((DWORD)asmfunc_loc + byte_loc + 4));
-            
+
          byte_loc += sizeof(DWORD);
-         
+
          if (call_type == __CDECL)
          {
             asmfunc[byte_loc++] = 0x83; //add  esp,num_of_params * sizeof(DWORD)
             asmfunc[byte_loc++] = 0xC4;
             asmfunc[byte_loc++] = (BYTE)(num_of_params * sizeof(DWORD));
          }
-         
+
          //store the return val at the end the the func
          //could also use 0x89 0x05 ?
-         asmfunc[byte_loc++] = 0xA3;     //mov [ret_val_address],eax 
+         asmfunc[byte_loc++] = 0xA3;     //mov [ret_val_address],eax
          TO_BYTES(DWORD, &asmfunc[byte_loc], (DWORD)asmfunc_loc + size);
          byte_loc += sizeof(DWORD);
-         
+
          asmfunc[byte_loc++] = 0xC3;      //ret
       }
       //x64 call
@@ -909,9 +909,9 @@ namespace ReadWriteMemoryTools
             //failed again
             if (!asmfunc_loc) return NULL;
          }
-         
+
          asmfunc = new BYTE[size]();
-         
+
          /* asmfunc x64 template
             48 83 EC xx             //sub  rsp,xx
             ...
@@ -921,12 +921,12 @@ namespace ReadWriteMemoryTools
             49 B8 xxxxxxxxxxxxxxxx  //mov  r8,xxxxxxxxxxxxxxxx
             48 BA xxxxxxxxxxxxxxxx  //mov  rdx,xxxxxxxxxxxxxxxx
             48 89 xxxxxxxxxxxxxxxx  //mov  rcx,xxxxxxxxxxxxxxxx
-            FF 15 xxxxxxxx          //call qword ptr [xxxxxxxx]  
+            FF 15 xxxxxxxx          //call qword ptr [xxxxxxxx]
             48 89 05 xxxxxxxx       //mov  [xxxxxxxx],rax
             48 83 C4 xx             //add  rsp,xx
             C3                      //ret
          */
-         
+
          int byte_loc = 0;
          BYTE stack_alloc_size = 0;
          //8(the return address) + 32(reserved space for 4 arguments)
@@ -936,12 +936,12 @@ namespace ReadWriteMemoryTools
          //stack pointer RSP must be aligned on a 16-byte boundary
          //before a next function call.
          stack_alloc_size += stack_alloc_size % 16;
-         
+
          asmfunc[byte_loc++] = 0x48;            //sub  rsp,xx
-         asmfunc[byte_loc++] = 0x83;            
+         asmfunc[byte_loc++] = 0x83;
          asmfunc[byte_loc++] = 0xEC;
          asmfunc[byte_loc++] = stack_alloc_size;
-               
+
          //write the parameters in the function
          for (int i = 0; num_of_params - i > 4; i++)
          {
@@ -949,15 +949,15 @@ namespace ReadWriteMemoryTools
             asmfunc[byte_loc++] = 0xB8;
             TO_BYTES(QWORD, &asmfunc[byte_loc], lpParameters[num_of_params - 1 - i]);
             byte_loc += sizeof(QWORD);
-            
+
             asmfunc[byte_loc++] = 0x48;
             asmfunc[byte_loc++] = 0x89;
             asmfunc[byte_loc++] = 0x44;
             asmfunc[byte_loc++] = 0x24;
-            asmfunc[byte_loc++] = (BYTE)(((num_of_params - 1) * sizeof(QWORD)) - 
+            asmfunc[byte_loc++] = (BYTE)(((num_of_params - 1) * sizeof(QWORD)) -
                                          (i * sizeof(QWORD)));
          }
-         
+
          if (num_of_params >= 4)
          {
             asmfunc[byte_loc++] = 0x49;       //mov  r9,param4
@@ -986,14 +986,14 @@ namespace ReadWriteMemoryTools
             TO_BYTES(QWORD, &asmfunc[byte_loc], lpParameters[0]);
             byte_loc += sizeof(QWORD);
          }
-         
+
          //calculate destination function offset
          asmfunc[byte_loc++] = 0xFF;    //call qword ptr [xxxxxxxx]
          asmfunc[byte_loc++] = 0x15;
          asmfunc[byte_loc++] = 0x0C;
          byte_loc += 3;
          //next 3 are already zero
-         
+
          //store the return val at the end the the func
          asmfunc[byte_loc++] = 0x48;     //mov [ret_val_address],rax
          asmfunc[byte_loc++] = 0x89;
@@ -1001,49 +1001,49 @@ namespace ReadWriteMemoryTools
          asmfunc[byte_loc++] = 0x0D;
          byte_loc += 3;
          //next 3 are already zero
-         
+
          asmfunc[byte_loc++] = 0x48;       //add  rsp,xx
          asmfunc[byte_loc++] = 0x83;
          asmfunc[byte_loc++] = 0xC4;
          asmfunc[byte_loc++] = stack_alloc_size;
-         
+
          asmfunc[byte_loc++] = 0xC3;       //ret
-         
+
          TO_BYTES(QWORD, &asmfunc[byte_loc], lpStartAddress);
       }
 
       //write the calling function to allocated space
       WriteMemArray<BYTE>((LPVOID)asmfunc_loc, asmfunc, size);
-         
+
       //call the injected function
       HANDLE NewThreadhnd = ::CreateRemoteThread(
-         hProcess, 
-         NULL, 
-         0, 
-         (LPTHREAD_START_ROUTINE)asmfunc_loc, 
-         NULL, 
-         0, 
+         hProcess,
+         NULL,
+         0,
+         (LPTHREAD_START_ROUTINE)asmfunc_loc,
+         NULL,
+         0,
          NULL
          );
-          
+
       if (NewThreadhnd)
-      {         
+      {
          ::WaitForSingleObject(NewThreadhnd, 1000);
          ::CloseHandle(NewThreadhnd);
       }
       else
          LastWin32Error = ::GetLastError();
-         
+
       //get the return val
       ULONG_PTR return_val = ReadMem<ULONG_PTR>((LPVOID)(asmfunc_loc + size));
-      
+
       //DWORD pointer return, doesn't work with x64 values
       //::GetExitCodeThread(NewThreadhnd, &return_val);
 
       //free allocated memory for the calling function and a UINT_PTR var
       FreeMemory((LPVOID)asmfunc_loc);
       delete[] asmfunc;
-      
+
       return return_val;
    }
 
@@ -1053,13 +1053,13 @@ namespace ReadWriteMemoryTools
       HMODULE hLibModule = NULL;
       int mem_size;
       char *tLoadLibrary;
-      
+
       if (!bUnicode)
       {
          //c string length
          char *DLLPathA = (char*)DLLPath;
          while(*DLLPathA++);
-         
+
          mem_size = (DWORD)DLLPathA - (DWORD)DLLPath;
          tLoadLibrary = "LoadLibraryA";
       }
@@ -1068,57 +1068,57 @@ namespace ReadWriteMemoryTools
          //c string length
          wchar_t *DLLPathW = (wchar_t*)DLLPath;
          while(*DLLPathW++);
-         
+
          mem_size = (DWORD)DLLPathW - (DWORD)DLLPath;
          tLoadLibrary = "LoadLibraryW";
       }
-      
+
       tagMODULEENTRY32 hKernel32 = GetProcessModuleByNameA("kernel32.dll");
-       
+
       if (hKernel32.dwSize)
       {
-         LPTHREAD_START_ROUTINE LoadLibrary_address = 
-            (LPTHREAD_START_ROUTINE)GetRemoteProcAddress( 
+         LPTHREAD_START_ROUTINE LoadLibrary_address =
+            (LPTHREAD_START_ROUTINE)GetRemoteProcAddress(
                hKernel32.hModule,
                tLoadLibrary,
                is_x64_dll
             );
-          
+
          if (LoadLibrary_address)
          {
             //Allocate then write DLLPath to memory
             LPVOID pLibRemote = AllocateMemory(mem_size);
-            
+
             SIZE_T BytesWritten;
             if (!::WriteProcessMemory(
-                     hProcess, 
+                     hProcess,
                      pLibRemote,
                      DLLPath,
                      mem_size,
                      &BytesWritten)
                )
                LastWin32Error = ::GetLastError();
-            
+
             DWORD call_type;
             if (is_x64_dll)
                call_type = __X64FASTCALL;
             else
                call_type = __STDCALL;
-               
+
             //Load DLL into remote process, return base of loaded module
             ULONG_PTR parameters[] = { (ULONG_PTR)pLibRemote };
             hLibModule = (HMODULE)CallRemoteFunction(
                LoadLibrary_address,
-               call_type, 
-               parameters, 
+               call_type,
+               parameters,
                1
                );
-                  
+
             FreeMemory(pLibRemote);
          }
       }
       return hLibModule;
-   }      
+   }
 
    /*concept based off of Joachim Bauch's MemoryModule
    HMODULE RWMemory::InjectMemoryModule(const LPVOID DLLData)
@@ -1129,52 +1129,52 @@ namespace ReadWriteMemoryTools
 	   SIZE_T locationDelta;
 	   DllEntryProc DllEntry;
 	   BOOL successfull;
-               
+
       still working on...
       return hLibModule;
-   }*/ 
-   
+   }*/
+
    bool RWMemory::UnloadDLL(HMODULE hLibModule, bool is_x64_dll)
    {
       bool succeded = false;
       tagMODULEENTRY32 hKernel32 = GetProcessModuleByNameA("kernel32.dll");
-       
-      LPTHREAD_START_ROUTINE FreeLibrary_address = 
+
+      LPTHREAD_START_ROUTINE FreeLibrary_address =
          (LPTHREAD_START_ROUTINE)GetRemoteProcAddress(
             hKernel32.hModule,
             "FreeLibrary",
             is_x64_dll
             );
-      
+
       DWORD call_type;
       if (is_x64_dll)
          call_type = __X64FASTCALL;
       else
          call_type = __STDCALL;
-         
+
       //Unload DLL from remote process
       ULONG_PTR parameters[] = { (ULONG_PTR)hLibModule };
       succeded = CallRemoteFunction(
-         FreeLibrary_address, 
-         call_type, 
-         parameters, 
+         FreeLibrary_address,
+         call_type,
+         parameters,
          1
          ) != 0;
-      
+
       return succeded;
    }
-   
+
    namespace CurrentProcess
    {
       ULONG_PTR FindMemPattern(
-         ULONG_PTR MemoryAddress, 
-         SIZE_T Len, 
-         BYTE *Pattern, 
+         ULONG_PTR MemoryAddress,
+         SIZE_T Len,
+         BYTE *Pattern,
          char* Mask)
       {
-         ULONG_PTR PatterAddress = 0; 
+         ULONG_PTR PatterAddress = 0;
          BYTE* data = (BYTE*)MemoryAddress;
-         
+
          for(ULONG_PTR i = 0; i < Len && !PatterAddress; i++)
          {
             //while Mask[i2] isnt the null terminator
@@ -1191,10 +1191,10 @@ namespace ReadWriteMemoryTools
                   PatterAddress = MemoryAddress + i;
             }
          }
-         
+
          return PatterAddress;
       }
-      
+
       ULONG_PTR FindMemPattern(
          ULONG_PTR MemoryAddress,
          SIZE_T Len,
@@ -1206,7 +1206,7 @@ namespace ReadWriteMemoryTools
                   addr_sig.pattern,
                   addr_sig.mask) + addr_sig.offset;
       }
-      
+
       LPVOID AllocateMemory(SIZE_T size)
       {
          int LastWin32Error = 0;

@@ -23,7 +23,7 @@
 	Version: all
 *********************************************************************************/
 #include "WinMain.h"
- 
+
 char map_str[MAP_STR_SIZE] = {0},
    BufferA[32] = {0};
 
@@ -33,18 +33,18 @@ tagPROCESSENTRY32W pHalo = {0};
 DWORD WINAPI HDCThread(LPVOID lpMainWin)
 {
    HWND hMainWin = (HWND)lpMainWin;
-   
+
    //thread vars should be a little faster than static
    bool control_enabled_change = false,
       dll_injector_failed = false;
-   
+
    BYTE C_Setting = 0;
-   
-   short Lock_sec = 0, 
+
+   short Lock_sec = 0,
          Halo_sec = 0;
-   
+
    ULONG_PTR base_address = NULL;
-   
+
    while (!exiting)
    {
       HWND hHaloWin = FindWindowW(L"Halo", L"Halo");
@@ -53,7 +53,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
          DWORD dwProcessId;
          GetWindowThreadProcessId(hHaloWin, &dwProcessId);
          pHalo = RWMemory::GetProcessByID_W(dwProcessId);
-         
+
          if (str_cmpW(pHalo.szExeFile, szHaloPC_exe))
          {
             running_gt = Halo;
@@ -77,24 +77,24 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
             SetTpWindowText(hMainWin, hControls[HHALO_TYPE], szHaloCE);
             SetTpWindowText(hMainWin, hControls[HHALO_STATUS], szOff);
             //status_lbl2->ForeColor = System::Drawing::Color::Red;
-            
+
             main_module_name = empty_str;
             SetTpWindowText(hMainWin, hControls[HMAP_LBL], empty_str);
             SetTpWindowText(hMainWin, hControls[HMAP_STATUS], empty_str);
-            
+
             dll_injector_failed = false;
             base_address = NULL;
             scan_size = 0;
-            
+
             HS_Global_Header_ptr_address = NULL;
             Device_Groups_Header_ptr_address = NULL;
-               
+
             Current_Map_address = NULL;
             Cheats_address = NULL;
             ServerType_address = NULL;
 
             control_enabled_change = true;
-            
+
             Dev_enabled_address = NULL;
             Console_enabled_address = NULL;
             ShowHud_ptr_address = NULL;
@@ -102,132 +102,132 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
             //RiderEjection_address = NULL;
             cse_set_video_func_address = NULL;
             cinematic_ptr = NULL;
-   
+
             hHDC = NULL;
-            
+
             //force update
             running_sv_t = host;
-            
+
             delete Halo_Process;
             Halo_Process = NULL;
          }
       }
-      
+
       if (running_gt != not_running)
       {
          if (!Halo_Process)
          {
             Halo_Process = new RWMemory(pHalo);
-            
+
             SetTpWindowText(hMainWin, hControls[HMAP_LBL], szMap);
             SetTpWindowText(hMainWin, hControls[HHALO_STATUS], szOn);
             //status_lbl2->ForeColor = System::Drawing::Color::Green;
-            
+
             if (Halo_Process->LastWin32Error == ERROR_ACCESS_DENIED)
             {
                ::MessageBoxW(
-                  hMainWin, 
-                  L"This App needs to be run as administrator", 
-                  L"Error", 
+                  hMainWin,
+                  L"This App needs to be run as administrator",
+                  L"Error",
                   MB_OK | MB_ICONWARNING | MB_TASKMODAL
                   );
-                  
+
                SendMessage(hMainWin, WM_DESTROY, 0, 0);
             }
-         
+
             //find halo module info
             Halo_Process->ModuleSectionAddr_Size(
-               Halo_Process->GetProcessModuleByNameW(main_module_name).hModule, 
-               base_address, 
-               scan_size, 
-               (BYTE*)".text\0\0", 
+               Halo_Process->GetProcessModuleByNameW(main_module_name).hModule,
+               base_address,
+               scan_size,
+               (BYTE*)".text\0\0",
                false);
-            
+
             //find patterns
             ULONG_PTR DGHptr_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::Device_Groups_ptr_sig);
-            
+
             Device_Groups_Header_ptr_address = Halo_Process->ReadMem<DWORD>((LPVOID)DGHptr_ptr);
-            
+
 
             ULONG_PTR HSGptr_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::HS_Globals_ptr_sig);
-            
+
             HS_Global_Header_ptr_address = Halo_Process->ReadMem<DWORD>((LPVOID)HSGptr_ptr);
-         
+
             if (running_gt == HCE)
             {
                ULONG_PTR Dev_ptr = Halo_Process->FindMemPattern(
                   base_address,
                   scan_size,
                   HCE_Lib::Dev_addr_sig);
-                               
+
                Dev_enabled_address = Halo_Process->ReadMem<DWORD>((LPVOID)Dev_ptr);
             }
-            
+
             ULONG_PTR console_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::Console_addr_sig);
-                                
+
             Console_enabled_address = Halo_Process->ReadMem<DWORD>((LPVOID)console_ptr) + HaloCE_lib::Console::Enabled_offset;
 
             ULONG_PTR CMA_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::Current_map_addr_sig);
-                               
+
             Current_Map_address = Halo_Process->ReadMem<DWORD>((LPVOID)CMA_ptr);
-            
-            
+
+
             ULONG_PTR mem_region_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::Cheats_addr_sig);
-                                      
+
             Cheats_address = Halo_Process->ReadMem<DWORD>((LPVOID)mem_region_ptr);
-            
-            
+
+
             ULONG_PTR SHp_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::Show_Hud_ptr_addr_sig);
-                               
+
             ShowHud_ptr_address = Halo_Process->ReadMem<DWORD>((LPVOID)SHp_ptr);
-            
+
 
             ULONG_PTR lb_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::letterbox_ptr_addr_sig);
-                              
+
             LetterBox_ptr_address = Halo_Process->ReadMem<DWORD>((LPVOID)lb_ptr);
-            
-            
+
+
             //ULONG_PTR re_ptr = Halo_Process->FindMemPattern(
             //   base_address,
             //   scan_size,
             //   HaloCE_lib::Rider_Eject_addr_sig);
-            //                  
+            //
             //RiderEjection_address = Halo_Process->ReadMem<DWORD>((LPVOID)re_ptr);
-            
+
             ULONG_PTR svhc_ptr = Halo_Process->FindMemPattern(
                base_address,
                scan_size,
                HaloCE_lib::sv_ban_func_addr_sig);
-                              
+
             ServerType_address = Halo_Process->ReadMem<DWORD>((LPVOID)(svhc_ptr + 3));
-            
-            
+
+
             ULONG_PTR cse_ptr = Halo_Process->FindMemPattern(
-               base_address,   
+               base_address,
                scan_size,
                HaloCE_lib::cse_set_video_func_addr_sig);
-            
+
             cse_set_video_func_address = cse_ptr;
             cinematic_ptr = Halo_Process->ReadMem<DWORD>((LPVOID)(cse_ptr + 2));
 
@@ -241,19 +241,19 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
             cd_size = ::GetCurrentDirectoryW(cd_size, current_directory);
 
             int dll_name_length = 0; do dll_name_length++; while(Dll_Name[dll_name_length]);
-            
+
             current_directory = new wchar_t[cd_size + 1 + dll_name_length];
             ::GetCurrentDirectoryW(cd_size, current_directory);
-            
+
             //dll releases the memory
             DWORD CurrentDir_address = (DWORD)Halo_Process->AllocateMemory(cd_size);
             Halo_Process->WriteMemArray<wchar_t>((LPVOID)CurrentDir_address, current_directory, cd_size);
-               
+
             current_directory[cd_size - 1] = L'\\';
-            
+
             for (int i = 0; i <= dll_name_length; i++)
                current_directory[cd_size + i] = Dll_Name[i];
-            
+
             hHDC = Halo_Process->InjectDLL(current_directory, true, false);
             if (!hHDC)
             {
@@ -262,58 +262,58 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
             else
             {
                Halo_Process->ModuleSectionAddr_Size((HMODULE)hHDC, base_address, scan_size, (BYTE*)".data\0\0", false);
-               
+
                dll_addrs_ptr = Halo_Process->FindMemPattern(
                   base_address,
                   scan_size,
                   (BYTE*)"dll_st_addrs",
                   "xxxxxxxxxxxx") + 12;
-                  
+
                dll_addresses = Halo_Process->ReadMem<DLL_ADDRS>((LPVOID)dll_addrs_ptr);
                Halo_Process->WriteMem<DWORD>((LPVOID)(dll_addrs_ptr + FIELD_OFFSET(DLL_ADDRS, CurrentDir)), CurrentDir_address);
-               
+
                //copy current settings to dll
                Halo_Process->WriteMem<HWND>((LPVOID)(dll_addrs_ptr + FIELD_OFFSET(DLL_ADDRS, hHaloWin)), hHaloWin);
-               
+
                Halo_Process->WriteMemArray<CMDsLib::CMD_SCKEYS>((LPVOID)
-                  dll_addresses.halo_cmd_keys, 
-                  CMDsLib::halo_cmd_keys, 
+                  dll_addresses.halo_cmd_keys,
+                  CMDsLib::halo_cmd_keys,
                   HALO_CMDS_SIZE);
-                  
+
                Halo_Process->WriteMemArray<CMDsLib::CMD_SCKEYS>((LPVOID)
-                  dll_addresses.rpgb62_cmd_keys, 
-                  CMDsLib::rpg_beta6_2_cmd_keys, 
+                  dll_addresses.rpgb62_cmd_keys,
+                  CMDsLib::rpg_beta6_2_cmd_keys,
                   RPGB_CMDS_SIZE);
-                  
+
                Halo_Process->WriteMem<BOOL>((LPVOID)dll_addresses.halo_sk_enabled, CMDsLib::halo_commands.Enable_Shrtcts);
                Halo_Process->WriteMem<BOOL>((LPVOID)dll_addresses.rpg_beta62_sk_enabled, CMDsLib::rpgbeta6_2_commands.Enable_Shrtcts);
-               
+
                pMV_chkBx_CheckedChanged = dll_addresses.pFunc;
-               
+
                Halo_Process->WriteMem<WORD>((LPVOID)dll_addresses.game, (WORD)running_gt);
-               
+
                base_address = NULL;//reset for below
             }
             delete[] current_directory;
          }
-         
+
          if (Device_Groups_Header_ptr_address)
             Device_Groups_Header = Halo_Process->ReadMem<HaloCE_lib::DATA_HEADER>(
-               (LPVOID)Halo_Process->ReadMem<DWORD>((LPVOID)Device_Groups_Header_ptr_address)); 
-         
+               (LPVOID)Halo_Process->ReadMem<DWORD>((LPVOID)Device_Groups_Header_ptr_address));
+
          if (HS_Global_Header_ptr_address)
             HS_Global_Header = Halo_Process->ReadMem<HaloCE_lib::DATA_HEADER>(
                (LPVOID)Halo_Process->ReadMem<DWORD>((LPVOID)HS_Global_Header_ptr_address));
-            
+
          if (Current_Map_address)
             Halo_Process->ReadMemString((LPVOID)Current_Map_address, map_str);
-     
+
          if (ServerType_address)
          {
          //update host/client lbl 0 - main menu, 1 - client, 2 - host
             BYTE svtemp = (BYTE)running_sv_t;
             running_sv_t = Halo_Process->ReadMem<server_type>((LPVOID)ServerType_address);
-               
+
             if ((BYTE)running_sv_t != svtemp)
             {
                switch (running_sv_t)
@@ -330,12 +330,12 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                      //   rcon_lbl->Text = "Campaign";
                      //}
                      break;
-                 
+
                   case client:
                      SetTpWindowText(hMainWin, hControls[HSERVER_STATUS], szClient);
                      //rcon_lbl->ForeColor = System::Drawing::Color::Red;
                      break;
-                  
+
                   case host:
                      SetTpWindowText(hMainWin, hControls[HSERVER_STATUS], szHost);
                      //rcon_lbl->ForeColor = System::Drawing::Color::Green;
@@ -343,7 +343,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                }
             }
          }
-         
+
          if (Dev_enabled_address)
          {
              //update dev btn
@@ -363,7 +363,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                }
             }
          }
-         
+
          if (Console_enabled_address)
          {
             //update console btn
@@ -383,20 +383,20 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                }
             }
          }
-         
+
          if (Cheats_address)
          {
             //update deathless value
             int deathlesstemp = (int)Halo_Process->ReadMem<bool>((LPVOID)(Cheats_address + HaloCE_lib::CheatsEx::Deathless_offset));
             if (Button_GetCheck(hControls[HDEATHLESS]) != deathlesstemp)
                Button_SetCheck(hControls[HDEATHLESS], deathlesstemp);
-               
+
             //update infinite ammo value
             int infammotemp = (int)Halo_Process->ReadMem<bool>((LPVOID)(Cheats_address + HaloCE_lib::CheatsEx::Infinite_Ammo_offset));
             if (Button_GetCheck(hControls[HINFAMMO]) != infammotemp)
                Button_SetCheck(hControls[HINFAMMO], infammotemp);
          }
-         
+
          if (ShowHud_ptr_address)
          {
             //update show hud value
@@ -408,7 +408,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                   Button_SetCheck(hControls[HSHOWHUD], hudtemp);
             }
          }
-         
+
          if (LetterBox_ptr_address)
          {
             //update letter box value
@@ -421,14 +421,14 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                   Button_SetCheck(hControls[HLETTERBOX], lettemp);
             }
          }
-         
+
          //if (RiderEjection_address)
          //{
             //update rider ejction value
          //   int retemp = (int)Halo_Process->ReadMem<bool>((LPVOID)RiderEjection_address);
          //   if (Button_GetCheck(hControls[HEJECTION]) != retemp)
          //      Button_SetCheck(hControls[HEJECTION], retemp);
-         
+
          if (cinematic_ptr)
          {
             //update marines hud value
@@ -440,10 +440,10 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                if (cintemp == 2)
                {
                   float ftemp = Halo_Process->ReadMem<float>((LPVOID)(dwCinematic + 0x2C));
-                  
+
                   if (ftemp < 1.0f) cintemp = BST_INDETERMINATE;
                   else cintemp = BST_CHECKED;
-                     
+
                   if (Button_GetCheck(hControls[HMHUD]) != cintemp)
                      Button_SetCheck(hControls[HMHUD], cintemp);
                }
@@ -454,7 +454,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                   Button_SetCheck(hControls[HMHUD], cintemp);
             }
          }
-         
+
          //test for rpg_beta6_2 map///////////////////////////////////////
          if (str_cmpA(map_str, "rpg_beta6_2"))
          {
@@ -464,9 +464,9 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                control_enabled_change = true;
                rpgb6_2_running = true;
             }
-            
+
             //status_lbl4->ForeColor = System::Drawing::Color::Green;
-            
+
             if (HS_Global_Header_ptr_address)
             {
                //update alarm button
@@ -485,7 +485,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                      //alarm_btn->ForeColor = System::Drawing::Color::Red;
                   }
                }
-               
+
                //update setting
                BYTE settemp = Halo_Process->ReadMem<BYTE>((LPVOID)(HS_Global_Header.FirstItem + HCE_Lib::rpg_beta6_2_hs_global::setting_offset));
                if (C_Setting != settemp)
@@ -520,7 +520,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                      //BLD_activate->ForeColor = System::Drawing::Color::Red;
                   }
                }
-               
+
                //update fire halo button
                bool halotemp = Halo_Process->ReadMem<bool>((LPVOID)(HS_Global_Header.FirstItem + HCE_Lib::rpg_beta6_2_hs_global::nuked_offset));
                if (Nuked != halotemp)
@@ -537,7 +537,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
                      //halo_activate->ForeColor = System::Drawing::Color::Red;
                   }
                }
-               
+
                //update halo timer
                short halotimtemp = Halo_Process->ReadMem<short>((LPVOID)(HS_Global_Header.FirstItem + HCE_Lib::rpg_beta6_2_hs_global::boom_timer_offset));
                if (Halo_sec != halotimtemp)
@@ -553,7 +553,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
             rpgb6_2_running = false;
             //status_lbl4->ForeColor = System::Drawing::Color::Red;
          }
-         
+
          HWND hMap = hControls[HMAP_STATUS];
          GetWindowTextA(hMap, (LPSTR)BufferA, 32);
          //only change if its different
@@ -589,7 +589,7 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
          BOOL valid_address = FALSE;
          if (pMV_chkBx_CheckedChanged) valid_address = true;
          else if (cse_set_video_func_address) valid_address = true;
-         
+
          EnableTpWindow(hMainWin, hControls[HMHUD], running_gt != not_running && valid_address);
 
          //rpg_beta6_2 functions
@@ -616,10 +616,10 @@ DWORD WINAPI HDCThread(LPVOID lpMainWin)
 
          control_enabled_change = false;
       }
-      
+
       for (int i = 0; i < 14 && !exiting; i++)
          Sleep(50);
    }
-   
+
    return TRUE;
 }
