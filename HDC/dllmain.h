@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    dllmain.h
-	Project: HDC
-	Author:  Jesus7Freak, RadWolfie
-	Date:    11/30/2016
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    dllmain.h
+    Project: HDC
+    Author:  Jesus7Freak, RadWolfie
+    Date:    11/30/2016
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #pragma once
 #pragma comment(lib, "kernel32.lib")
@@ -43,7 +43,7 @@ using namespace ReadWriteMemoryTools;
 #define CLIENT 1
 #define HOST 2
 
-#define DO_NOT_SEND_MSG 0x100 
+#define DO_NOT_SEND_MSG 0x100
 
 enum HALO_TYPE : WORD { halo = 1, haloce = 2} extern running_gt;
 
@@ -74,13 +74,13 @@ struct DLL_ADDRESSES
 extern bool exit_thread,
    rpgb6_2_running,
    *Console_chck;
-   
+
 extern char *Current_Map_Str;
 
 extern wchar_t *LocationsFilePath,
    *Locations_File_Name,
    HaloSay_server_buffer[SV_NAME_SIZE+SV_BUFFER_SIZE];
-   
+
 extern BYTE *Dev_enabled,
    *Console_enabled,
    *ShowHud,
@@ -89,7 +89,7 @@ extern BYTE *Dev_enabled,
 
 extern short *ServerType,
    *Player0_index;
-   
+
 extern BOOL DestroyObjsEnabled;
 
 extern DWORD Current_Map_address,
@@ -129,17 +129,17 @@ extern DWORD Current_Map_address,
    ctl_array_size_address,
    ctl_filter_str_ptr_address,
    TempAdmin[16];
-   
+
 extern float *game_speed;
 
 extern HaloCE_lib::CHEATS *cheats;
 extern HaloCE_lib::RASTERIZER *rasterizer;
 
-extern HaloCE_lib::DATA_HEADER **Players_ptr, 
-   **Device_Groups_ptr, 
+extern HaloCE_lib::DATA_HEADER **Players_ptr,
+   **Device_Groups_ptr,
    **Object_ptr,
    **HS_Globals_ptr;
-   
+
 extern HaloCE_lib::STATIC_PLAYER *players;
 extern HaloCE_lib::OBJECT_TABLE_ARRAY *objects;
 

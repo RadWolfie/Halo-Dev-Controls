@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    Hooks.cpp
-	Project: HDC
-	Author:  Jesus7Freak, RadWolfie
-	Date:    12/01/2016
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    Hooks.cpp
+    Project: HDC
+    Author:  Jesus7Freak, RadWolfie
+    Date:    12/01/2016
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #include "dllmain.h"
 
@@ -262,7 +262,7 @@ __declspec(noinline) BOOL __fastcall ckbx_grav_boots_CheckedChanged(BYTE Checked
       if (VirtualProtect((LPVOID)jmp_to_address, 19, PAGE_EXECUTE_READWRITE, &dwOldProtect))
       {
          if (*(BYTE*)(grav_boots_hook_address - 3) != 0xEB)
-         {  
+         {
             BYTE *code_cave = (BYTE*)jmp_to_address;
 
             //mov [eax+000002F4],00000202
@@ -355,7 +355,7 @@ __declspec(noinline) bool __stdcall MV_chkBx_CheckedChanged(int number)
       MOV EDI,EDX
       REP STOS DWORD PTR [EDI]
       MOV BYTE PTR DS:[EDX+39h],1
-      MOV BYTE PTR [EDX+38h],1               
+      MOV BYTE PTR [EDX+38h],1
 
       skip_cin_start:
       MOV EAX,fnum
@@ -537,7 +537,7 @@ void __declspec(naked) ConsoleTablistHook()
    //ECX console str
    //EDX index so far | cmd str
    //EBX console str size
-   //EBP array pointer 
+   //EBP array pointer
    //ESI array index ptr
    //EDI cmd str index
    __asm

@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    CMDParser.cpp
-	Project: HDC
-	Author:  Jesus7Freak
-	Date:    11/22/2011
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    CMDParser.cpp
+    Project: HDC
+    Author:  Jesus7Freak
+    Date:    11/22/2011
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #include "dllmain.h"
 
@@ -38,7 +38,7 @@ wchar_t *FailLocalCmd = L"Failed: Local Command Only.",
    *FailPlyrNtSpwn = L"Failed: %s hasn't respawned.",
    *FailPlyrNtInVeh = L"Failed: %s is not in a vehicle.",
    *FailPlyrNoWep = L"Failed: %s does not have a weapon.";
-   
+
 //kill messages
 wchar_t *SuccededKillMsgs[8] =
 {
@@ -131,7 +131,7 @@ CmdFunc PlayerCmdFuncs[PLAYER_CMDS_SIZE] =
    Player::ObjectScale
 };
 
-CmdFunc *AllCmdFuncs[CMD_SET_SIZE] = 
+CmdFunc *AllCmdFuncs[CMD_SET_SIZE] =
 {
    PlayerCmdFuncs,
    HaloCmdFuncs,
@@ -143,7 +143,7 @@ int ParseCMDStrPlayers(wchar_t *cmd_str, short* player_index_array, int &pi_foun
    int max_players_to_find, wchars_processed = 0;
    HaloCE_lib::DATA_HEADER *Players = *Players_ptr;
    int NumOfPlayers = Players->NumOfItems;
-   
+
    if (pi_found)
    {
       max_players_to_find = pi_found;
@@ -151,8 +151,8 @@ int ParseCMDStrPlayers(wchar_t *cmd_str, short* player_index_array, int &pi_foun
    }
    else
       max_players_to_find = NumOfPlayers;
-   
-   if (*cmd_str == L'\"') 
+
+   if (*cmd_str == L'\"')
    {
       cmd_str++;
       wchars_processed += 2;
@@ -162,14 +162,14 @@ int ParseCMDStrPlayers(wchar_t *cmd_str, short* player_index_array, int &pi_foun
    {
       if (!players[pi].PlayerID) continue;
       else vpi++;
-      
+
       int j = 0;
       wchar_t *player_name = players[pi].PlayerName0;
       bool str_contain_search = false;
       for (int i = 0; i < HaloCE_lib::PlayerNameMaxSize; i++)
       {
          wchar_t cmd_str_wchar = cmd_str[j];
-         
+
          if (cmd_str_wchar == L'*')
          {
             wchar_t next_wchar = cmd_str[j + 1];
@@ -185,29 +185,29 @@ int ParseCMDStrPlayers(wchar_t *cmd_str, short* player_index_array, int &pi_foun
                str_contain_search = true;
             }
          }
-         
+
          if (cmd_str_wchar == L'?') continue;
-            
+
          if (cmd_str_wchar != player_name[i])
          {
             if (!str_contain_search) break;
             else continue;
          }
-         
+
          if (!player_name[i + 1])
          {
             wchars_processed = j;
             player_index_array[pi_found++] = pi;
             break;
          }
-         
+
          j++;
       }
    }
 
    if (pi_found > 0) wchars_processed += 1;
    else wchars_processed = 0;
-   
+
    return wchars_processed;
 }
 
@@ -215,10 +215,10 @@ int ParseCMDStrPlayers(wchar_t *cmd_str, short* player_index_array, int &pi_foun
 DWORD __fastcall CMDParser(wchar_t *cmd_str, short exec_player_index)
 {
    if (!TempAdmin[exec_player_index]) return FALSE;
-   
+
    int cmd_name_length = 0;
    while (cmd_str[cmd_name_length] && cmd_str[cmd_name_length++] != L' ');
-   
+
    wchar_t *add_space = &cmd_str[cmd_name_length];
    if (!add_space[0])
    {
@@ -226,7 +226,7 @@ DWORD __fastcall CMDParser(wchar_t *cmd_str, short exec_player_index)
       add_space[0] = ' ';
       cmd_name_length++;
    }
-   
+
    bool found = false;
    BOOL succeded = FALSE;
    for (int cmd_group_i = 0; !found && cmd_group_i < CMD_SET_SIZE; cmd_group_i++)
@@ -235,7 +235,7 @@ DWORD __fastcall CMDParser(wchar_t *cmd_str, short exec_player_index)
       char **cmd_strs = cmd_group->cmd_strs;
       int group_size = cmd_group->size;
       CmdFunc *CmdGroupFuncs = AllCmdFuncs[cmd_group_i];
-      
+
       for (int i = 0; i < group_size; i++)
       {
          //skip the / as it already has been check by the hook
@@ -247,26 +247,26 @@ DWORD __fastcall CMDParser(wchar_t *cmd_str, short exec_player_index)
          }
       }
    }
-   
+
    return succeded;
 }
 
 BOOL __fastcall Halo::CommandHelp(wchar_t *cmd_args, short exec_player_index)
 {
-   BOOL succeded = FALSE; 
+   BOOL succeded = FALSE;
    //uses the space like a null terminator
    short cmd_arg_length = 0; while (cmd_args[cmd_arg_length]) cmd_arg_length++;
    cmd_args[cmd_arg_length + 1] = 0;
    cmd_args[cmd_arg_length] = ' ';
-   
+
    wchar_t *chat_header = NULL, *chat_usage = NULL, *chat_descript = NULL;
-   
+
    for (int cmd_group_i = 0; !chat_header && cmd_group_i < 3; cmd_group_i++)
    {
       CMDsLib::COMMANDS *cmd_group = CMDsLib::all_commands[cmd_group_i];
       char **cmd_strs = cmd_group->cmd_strs;
       int group_size = cmd_group->size;
-      
+
       for (int i = 0; !chat_header && i < group_size; i++)
       {
          if (str_cmpAW(cmd_strs[i], cmd_args, cmd_arg_length))
@@ -279,7 +279,7 @@ BOOL __fastcall Halo::CommandHelp(wchar_t *cmd_args, short exec_player_index)
          }
       }
    }
-   
+
    if (!chat_header && str_cmpAW("[pExpression] ", cmd_args, cmd_arg_length))
    {
       HaloSay(L"example use of [pExpression]: Shadow, AoO Aurora, N®Þ»Jedi", exec_player_index);
@@ -297,16 +297,16 @@ BOOL __fastcall Halo::CommandHelp(wchar_t *cmd_args, short exec_player_index)
       chat_header = pCDS[0].cmd_header;
       chat_usage = pCDS[0].cmd_usage;
    }
-   
-   
+
+
    if (chat_header) succeded = TRUE;
    else chat_header = L"Failed: command not found.";
-      
+
    HaloSay(chat_header, exec_player_index);
-   
+
    if (chat_usage) HaloSay(chat_usage, exec_player_index);
    if (chat_descript) HaloSay(chat_descript, exec_player_index);
-   
+
    return succeded;
 }
 
@@ -315,25 +315,25 @@ BOOL __fastcall Halo::ListCommands(wchar_t *cmd_args, short exec_player_index)
    int list_i = 0;
    wchar_t list_str[128];
    list_str[list_i++] = ' ';
-   
+
    for (int cmd_group_i = 0; cmd_group_i < 3; cmd_group_i++)
    {
       CMDsLib::COMMANDS *cmd_group = CMDsLib::all_commands[cmd_group_i];
       char **cmd_strs = cmd_group->cmd_strs;
       int group_size = cmd_group->size;
-      
+
       for (int i = 0; i < group_size; i++)
       {
          char *cmd_str = cmd_strs[i];
          int j = 0;
          char _char = ' ';
-         
+
          do
          {
             list_str[list_i++] = (wchar_t)_char;
             _char = cmd_str[j++];
          }while (_char);
-         
+
          if (list_i > 112)
          {
             list_str[list_i] = 0;//add null terminator
@@ -341,7 +341,7 @@ BOOL __fastcall Halo::ListCommands(wchar_t *cmd_args, short exec_player_index)
             list_i = 1;
          }
       }
-      
+
       //print the last line of the group
       if (list_i > 1)
       {
@@ -361,36 +361,36 @@ BOOL __fastcall Halo::ListTeleportLocs(wchar_t *cmd_args, short exec_player_inde
    //seems like a good idea
    wchar_t list_str[128];
    list_str[list_i++] = ' ';
-   
+
    unsigned int map_i = 0;
    if (FindMapIndex(&maps_tele_sites, Current_Map_Str, map_i))
    {
       int loc_num = maps_tele_sites[map_i].teleport_locations.size();
       TELEPORT_LOCATION *locs = &maps_tele_sites[map_i].teleport_locations[0];
-      
+
       for (int loc_i = 0; loc_i < loc_num; loc_i++)
       {
          wchar_t *loc_str = locs[loc_i].teleport_loc_name;
          int j = 0;
          wchar_t _wchar = L' ';
-         
+
          do
          {
             list_str[list_i++] = _wchar;
             _wchar = loc_str[j++];
          }while (_wchar);
-         
+
          //extra padding
          list_str[list_i++] = L' ';
-            
+
          if (list_i > 112)
          {
             list_str[list_i] = 0;//add null terminator
             HaloSay(list_str, exec_player_index);
             list_i = 1;
          }
-      } 
-      
+      }
+
       //print the last line of the group
       if (list_i > 1)
       {
@@ -403,7 +403,7 @@ BOOL __fastcall Halo::ListTeleportLocs(wchar_t *cmd_args, short exec_player_inde
       HaloSay(
          L"Failed: Their are no teleport locations defined, for this map.",
          exec_player_index);//, Current_Map_Str); is not a wchar_t*
-   
+
    return succeded;
 }
 
@@ -415,47 +415,47 @@ BOOL __fastcall Halo::EnableConsole(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-      
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       *Console_enabled = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
 BOOL __fastcall Halo::EnableDevMode(wchar_t *cmd_args, short exec_player_index)
 {
-   if (running_gt != haloce) 
+   if (running_gt != haloce)
    {
       HaloSay(L"Failed: Halo Custom Edition only command", exec_player_index);
       return FALSE;
    }
-   
+
    //host only cmd
    if (exec_player_index)
    {
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       *Dev_enabled = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -463,7 +463,7 @@ BOOL __fastcall Halo::CheatsDeathless(wchar_t *cmd_args, short exec_player_index
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -476,11 +476,11 @@ BOOL __fastcall Halo::CheatsDeathless(wchar_t *cmd_args, short exec_player_index
       succeded = TRUE;
       GenericMsg = L"Deathless has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -488,7 +488,7 @@ BOOL __fastcall Halo::CheatsInfiniteAmmo(wchar_t *cmd_args, short exec_player_in
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -501,11 +501,11 @@ BOOL __fastcall Halo::CheatsInfiniteAmmo(wchar_t *cmd_args, short exec_player_in
       succeded = TRUE;
       GenericMsg = L"Infinite Ammo has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -513,7 +513,7 @@ BOOL __fastcall Halo::CheatsBottomlessClip(wchar_t *cmd_args, short exec_player_
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -526,11 +526,11 @@ BOOL __fastcall Halo::CheatsBottomlessClip(wchar_t *cmd_args, short exec_player_
       succeded = TRUE;
       GenericMsg = L"Bottomless Clip has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -542,18 +542,18 @@ BOOL __fastcall Halo::ShowHudFunc(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       *ShowHud = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -565,18 +565,18 @@ BOOL __fastcall Halo::LetterBoxFunc(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       *LetterBox = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -584,7 +584,7 @@ BOOL __fastcall Halo::RiderEjectionFunc(wchar_t *cmd_args, short exec_player_ind
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -597,11 +597,11 @@ BOOL __fastcall Halo::RiderEjectionFunc(wchar_t *cmd_args, short exec_player_ind
       succeded = TRUE;
       GenericMsg = L"Rider Ejection has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -609,7 +609,7 @@ BOOL __fastcall Halo::CheatsOmnipotent(wchar_t *cmd_args, short exec_player_inde
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -622,11 +622,11 @@ BOOL __fastcall Halo::CheatsOmnipotent(wchar_t *cmd_args, short exec_player_inde
       succeded = TRUE;
       GenericMsg = L"Omnipotent has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -634,7 +634,7 @@ BOOL __fastcall Halo::CheatsJetPack(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -647,11 +647,11 @@ BOOL __fastcall Halo::CheatsJetPack(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Fall Damage has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -659,7 +659,7 @@ BOOL __fastcall Halo::CheatsBumpPossession(wchar_t *cmd_args, short exec_player_
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -672,11 +672,11 @@ BOOL __fastcall Halo::CheatsBumpPossession(wchar_t *cmd_args, short exec_player_
       succeded = TRUE;
       GenericMsg = L"Bump Possession has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -684,7 +684,7 @@ BOOL __fastcall Halo::CheatsSuperJump(wchar_t *cmd_args, short exec_player_index
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -697,11 +697,11 @@ BOOL __fastcall Halo::CheatsSuperJump(wchar_t *cmd_args, short exec_player_index
       succeded = TRUE;
       GenericMsg = L"Super Jump has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -709,15 +709,15 @@ BOOL __fastcall Halo::CheatsReflexiveDamage(wchar_t *cmd_args, short exec_player
 {
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       cheats->Reflexive_damage = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -725,7 +725,7 @@ BOOL __fastcall Halo::CheatsMedusa(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -738,11 +738,11 @@ BOOL __fastcall Halo::CheatsMedusa(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Medusa has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -750,15 +750,15 @@ BOOL __fastcall Halo::CheatsXboxController(wchar_t *cmd_args, short exec_player_
 {
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       cheats->Controller = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -770,18 +770,18 @@ BOOL __fastcall Halo::ShowWireFrame(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       rasterizer->WireFrame = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -793,18 +793,18 @@ BOOL __fastcall Halo::ShowFog(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       rasterizer->FogAtmosphere = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -816,18 +816,18 @@ BOOL __fastcall Halo::ShowFogPlane(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       rasterizer->FogPlane = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -839,18 +839,18 @@ BOOL __fastcall Halo::ShowFPS(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    BOOL _bool;
-   
+
    if (CMDsLib::ParseStrBool(cmd_args, &_bool))
    {
       rasterizer->FPS = (BYTE)_bool;
       succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalBool, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -862,10 +862,10 @@ BOOL __fastcall Halo::Game_Speed(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    float fnumber;
    if (!*cmd_args)
    {
@@ -878,11 +878,11 @@ BOOL __fastcall Halo::Game_Speed(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Game Speed has been set to %.2f";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, fnumber);
-      
+
    return succeded;
 }
 
@@ -890,7 +890,7 @@ BOOL __fastcall Halo::Rapid_Fire(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -903,11 +903,11 @@ BOOL __fastcall Halo::Rapid_Fire(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Rapid Fire has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -915,7 +915,7 @@ BOOL __fastcall Halo::Time_Freeze(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -928,11 +928,11 @@ BOOL __fastcall Halo::Time_Freeze(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Time Freeze has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -940,7 +940,7 @@ BOOL __fastcall Halo::Grav_Boots(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -953,11 +953,11 @@ BOOL __fastcall Halo::Grav_Boots(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Grav Boots has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-      
+
    return succeded;
 }
 
@@ -965,7 +965,7 @@ BOOL __fastcall Halo::Vehicle_NTR(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL _bool;
    if (!*cmd_args)
    {
@@ -978,11 +978,11 @@ BOOL __fastcall Halo::Vehicle_NTR(wchar_t *cmd_args, short exec_player_index)
       succeded = TRUE;
       GenericMsg = L"Vehicle Team Restriction has been set to %i";
    }
-   else 
+   else
       GenericMsg = FailInvalBool;
-      
+
    HaloSay(GenericMsg, exec_player_index, _bool);
-   
+
    return succeded;
 }
 
@@ -1000,7 +1000,7 @@ BOOL __fastcall Halo::Vehicle_NTR(wchar_t *cmd_args, short exec_player_index)
          console_cmd++;
       }
    }
-   
+
    //this would be bad if this was allowed
    if (!str_cmpA(console_cmd, "quit"))
    {
@@ -1016,9 +1016,9 @@ BOOL __fastcall Halo::Vehicle_NTR(wchar_t *cmd_args, short exec_player_index)
          TEST AL,AL
          JNE SHORT console_succeded
       }
-      
+
       HaloSay(FailBadExec, exec_player_index);
-      
+
       __asm
       {
          console_succeded:
@@ -1036,7 +1036,7 @@ BOOL __fastcall Halo::Marines_HUD(wchar_t *cmd_args, short exec_player_index)
       HaloSay(FailLocalCmd, exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
 
    int number = 0;
@@ -1045,9 +1045,9 @@ BOOL __fastcall Halo::Marines_HUD(wchar_t *cmd_args, short exec_player_index)
       if (MV_chkBx_CheckedChanged(number))
          succeded = TRUE;
    }
-   else 
+   else
       HaloSay(FailInvalNum, exec_player_index);
-            
+
    return succeded;
 }
 
@@ -1055,55 +1055,55 @@ BOOL __fastcall Halo::Marines_HUD(wchar_t *cmd_args, short exec_player_index)
 
 BOOL __fastcall RPG::Environment_Day(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
-   short *setting = (short*)((*HS_Globals_ptr)->FirstItem 
+
+   short *setting = (short*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::setting_offset);
-      
+
    if (*setting != 0)
    {
       *setting = 0;
       HaloSay(L"*the sun has come up*", -1);
    }
-   
+
    return TRUE;
 }
 
 BOOL __fastcall RPG::Environment_Rain(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
-   short *setting = (short*)((*HS_Globals_ptr)->FirstItem 
+
+   short *setting = (short*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::setting_offset);
-      
+
    if (*setting != 1)
    {
       *setting = 1;
       HaloSay(L"*a dense fog covers the entire area as it starts to rain*", -1);
    }
-   
+
    return TRUE;
 }
 
 BOOL __fastcall RPG::Environment_Night(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
-   short *setting = (short*)((*HS_Globals_ptr)->FirstItem 
+
+   short *setting = (short*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::setting_offset);
-      
+
    if (*setting != 2)
    {
       *setting = 2;
@@ -1114,124 +1114,124 @@ BOOL __fastcall RPG::Environment_Night(wchar_t *cmd_args, short exec_player_inde
 
 BOOL __fastcall RPG::AirBase_Alarm(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg;
-   
-   bool *alarmed = (bool*)((*HS_Globals_ptr)->FirstItem 
+
+   bool *alarmed = (bool*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::alarmed_offset);
-   
-   bool *alarm_control_2 = (bool*)((*Device_Groups_ptr)->FirstItem 
+
+   bool *alarm_control_2 = (bool*)((*Device_Groups_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_device_groups::alarm_control_2_offset);
-      
+
    int number = 0;
    if (CMDsLib::ParseStrBool(cmd_args, &number))
    {
       if (number == 1)
       {
          if (!*alarmed) *alarm_control_2 = true;
-         
+
          GenericMsg = L"The Levis Station's alarm has been triggered.";
       }
       else if (number == 0)
       {
          if (*alarmed) *alarm_control_2 = true;
-         
+
          GenericMsg = L"The Levis Station's alarm has been switched off.";
       }
       succeded = TRUE;
    }
    else
       GenericMsg = FailInvalNum;
-      
+
    HaloSay(GenericMsg, -1);
-   
+
    return succeded;
 }
 
 BOOL __fastcall RPG::AirBase_LockDown(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg;
-   
-   bool *locked = (bool*)((*HS_Globals_ptr)->FirstItem 
+
+   bool *locked = (bool*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::locked_offset);
-   
-   bool *lock_control = (bool*)((*Device_Groups_ptr)->FirstItem 
+
+   bool *lock_control = (bool*)((*Device_Groups_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_device_groups::lock_control_offset);
-            
+
    if (!*locked)
    {
       *lock_control = true;
       succeded = TRUE;
-      GenericMsg = L"Levis Station's lockdown procedures have been initiated."; 
+      GenericMsg = L"Levis Station's lockdown procedures have been initiated.";
    }
    else
       GenericMsg = L"Failed: Levis Station has already been locked down.";
-      
+
    HaloSay(GenericMsg, -1);
-   
+
    return succeded;
 }
 
 BOOL __fastcall RPG::Fire_Halo(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg;
-   
-   bool *nuked = (bool*)((*HS_Globals_ptr)->FirstItem 
+
+   bool *nuked = (bool*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::nuked_offset);
-   
-   bool *boom_control = (bool*)((*Device_Groups_ptr)->FirstItem 
+
+   bool *boom_control = (bool*)((*Device_Groups_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_device_groups::boom_control_offset);
-   
+
    if (!*nuked)
    {
       *boom_control = true;
       succeded = TRUE;
-      GenericMsg = L"Halo will be fired when someone is in close proximity to the control room."; 
+      GenericMsg = L"Halo will be fired when someone is in close proximity to the control room.";
    }
    else
       GenericMsg = L"Failed: Halo is not ready to fire.";
-      
+
    HaloSay(GenericMsg, -1);
-   
+
    return succeded;
 }
 
 BOOL __fastcall RPG::LockDown_Timer(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
-   short *lock_timer = (short*)((*HS_Globals_ptr)->FirstItem 
+
+   short *lock_timer = (short*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::lock_timer_offset);
-   
+
    int number;
-   
+
    //displayer info
    if (!*cmd_args)
    {
@@ -1246,28 +1246,28 @@ BOOL __fastcall RPG::LockDown_Timer(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailInvalNum;
-      
+
    HaloSay(GenericMsg, exec_player_index, *lock_timer / 30);
-   
+
    return succeded;
 }
 
 BOOL __fastcall RPG::Halo_Timer(wchar_t *cmd_args, short exec_player_index)
 {
-   if (!rpgb6_2_running) 
+   if (!rpgb6_2_running)
    {
       HaloSay(L"Failed: rpg_beta6_2 only command", exec_player_index);
       return FALSE;
    }
-   
+
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
-   short *boom_timer = (short*)((*HS_Globals_ptr)->FirstItem 
+
+   short *boom_timer = (short*)((*HS_Globals_ptr)->FirstItem
       + HCE_Lib::rpg_beta6_2_hs_global::boom_timer_offset);
-   
+
    int number;
-   
+
    //displayer info
    if (!*cmd_args)
    {
@@ -1282,9 +1282,9 @@ BOOL __fastcall RPG::Halo_Timer(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailInvalNum;
-      
+
    HaloSay(GenericMsg, exec_player_index, *boom_timer / 30);
-      
+
    return succeded;
 }
 
@@ -1308,20 +1308,20 @@ inline HaloCE_lib::VEHICLE_OBJECT* GetPlayerVehObj(HaloCE_lib::SPARTAN* player_o
    HaloCE_lib::VEHICLE_OBJECT *veh_obj_address = NULL;
    if (player_obj->VehicleTag.Index != -1)
       veh_obj_address = (HaloCE_lib::VEHICLE_OBJECT*)GetObj(player_obj->VehicleTag.Index);
-      
+
    return veh_obj_address;
 }
 inline bool KillPlayer(short player_index)
 {
    bool succeded = false;
    HaloCE_lib::SPARTAN *player_object = GetPlayerObj(player_index);
-   
+
    if(player_object)
    {
       player_object->KillPlayer = 0x20;
       succeded = true;
    }
-   
+
    return succeded;
 }
 
@@ -1330,19 +1330,19 @@ void __declspec(naked) CreateObject()
 {
    //HaloCE_lib::OBJECT_TAG NewObjTag;
    __asm
-   {  
+   {
       PUSH 0x3F800000
       PUSH 0x3F800000
       PUSH 0x3F800000
-      
+
       PUSH 0x3F800000
       PUSH 0x3F800000
       PUSH 0x3F800000
-      
+
       PUSH 0x3F800000
       PUSH 0x3F800000
       PUSH 0x3F800000
-      
+
       PUSH 0x3F800000
       PUSH 0x3F800000
       PUSH 0x3F800000
@@ -1367,22 +1367,22 @@ void __declspec(naked) CreateObject()
       PUSH DWORD PTR [ECX+8]//0x42DD6B85//0x42DF3BE8
       PUSH DWORD PTR [ECX+4]//0x441BDE9D//0x441D0C44
       PUSH DWORD PTR [ECX]//0xC3933039//0xC38D246E
-      
+
       PUSH 0x0000FFFF
       PUSH 0
       PUSH 0xFFFFFFFF
       PUSH 0xFFFFFFFF
       PUSH 0
       PUSH EDX ;//ObjTypeTag
-      
+
       MOV EDX,ESP
       PUSH ECX;//saving ECX too
-      
+
       PUSH 0
       PUSH EDX
       CALL DWORD PTR [CreateObj_func_address]
       ADD ESP,8
-      
+
       POP ECX
       POP EDX ;//restore EDX
       ADD ESP,84h
@@ -1395,16 +1395,16 @@ BOOL __fastcall Player::Speed(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-   
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       float fnumber = 0;
-      
+
       //displayer info
       if (!*cmd_args)
       {
@@ -1421,19 +1421,19 @@ BOOL __fastcall Player::Speed(wchar_t *cmd_args, short exec_player_index)
          succeded = TRUE;
       }
       else if (CMDsLib::ParseStrFloat(++cmd_args, &fnumber))
-      {  
+      {
          for (int i = 0; i < pi_found; i++)
          {
             HaloCE_lib::STATIC_PLAYER *pSP = &players[Player_Indexes[i]];
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]),
                   *vehicle_object;
-               if (player_object && 
+               if (player_object &&
                   (vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object)))
-               {        
+               {
                   //vehicle_object;
                   __asm
                   {
@@ -1441,12 +1441,12 @@ BOOL __fastcall Player::Speed(wchar_t *cmd_args, short exec_player_index)
                      MOV EDX,DWORD PTR [EDX]
                      AND EDX,0xFFFF
                      SHL EDX,5
-                     
+
                      MOV ECX,0x00816DE4;
                      MOV ECX,DWORD PTR [ECX]
-                     
+
                      MOV EAX,DWORD PTR [EDX+ECX+14h]
-                     
+
                      MOV EDX,fnumber
                      MOV DWORD PTR [EAX+2F8h],EDX
                   }
@@ -1457,12 +1457,12 @@ BOOL __fastcall Player::Speed(wchar_t *cmd_args, short exec_player_index)
                   pSP->SpeedModifier = fnumber;
                   SpecificMsg = L"%s's speed modifier has been set to %.2f";
                }
-               
+
                succeded = TRUE;
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1477,10 +1477,10 @@ BOOL __fastcall Player::Speed(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -1488,10 +1488,10 @@ BOOL __fastcall Player::ActiveCamo(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-   
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
@@ -1501,9 +1501,9 @@ BOOL __fastcall Player::ActiveCamo(wchar_t *cmd_args, short exec_player_index)
          short durration = seconds * 30; //halo time units = 30 * seconds
 
          for (int i = 0; i < pi_found; i++)
-         { 
+         {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
@@ -1530,7 +1530,7 @@ BOOL __fastcall Player::ActiveCamo(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1546,9 +1546,9 @@ BOOL __fastcall Player::ActiveCamo(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg) HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -1556,12 +1556,12 @@ BOOL __fastcall Player::Suspend(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    BOOL suspend;
-   
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
@@ -1570,7 +1570,7 @@ BOOL __fastcall Player::Suspend(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
@@ -1578,10 +1578,10 @@ BOOL __fastcall Player::Suspend(wchar_t *cmd_args, short exec_player_index)
                {
                   //HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                   //if (vehicle_object) player_object = vehicle_object;
-                  
+
                   player_object->IsSuspended = (BYTE)suspend;
                   succeded = TRUE;
-                  
+
                   if (suspend) SpecificMsg = L"%s is now suspended.";
                   else SpecificMsg = L"%s is now unsuspended.";
                }
@@ -1590,7 +1590,7 @@ BOOL __fastcall Player::Suspend(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1605,10 +1605,10 @@ BOOL __fastcall Player::Suspend(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -1616,13 +1616,13 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL, *teleport_to;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    float coordinates[3];
    int teleport_type = 0;
-   
+
    int arg_len;
    if (str_cmpW(cmd_args, L"remove ", 7))
    {
@@ -1638,27 +1638,27 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
             //delete map if their are no more locs
             if (!tl->size())
                maps_tele_sites.erase(maps_tele_sites.begin() + map_i);
-               
+
             WriteLocationsToFile(LocationsFilePath, &maps_tele_sites);
-            SpecificMsg = L"\"%s\" has been removed.";     
+            SpecificMsg = L"\"%s\" has been removed.";
          }
          else
             SpecificMsg = FailBadTeleLoc;
       }
       else
          SpecificMsg = FailMissingLoc;
-         
+
       HaloSay(
          SpecificMsg,
          exec_player_index,
          cmd_args);
-               
+
    }
    else if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       int arg_count = CMDsLib::GetCMDArgCount(cmd_args);
-         
+
       if (arg_count == 3)
       {
          //use x y z coordinates
@@ -1679,19 +1679,19 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
          {
             HaloCE_lib::SPARTAN *player2_object = GetPlayerObj(player2_index);
             if (player2_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player2_object);
                if (vehicle_object) player2_object = vehicle_object;
-               
+
                for (int i = 0; i < 3; i++)
                   coordinates[i] = player2_object->m_World[i];
-                  
+
                teleport_to = players[player2_index].PlayerName0;
                teleport_type = 2;
             }
          }
-         
+
          if (!teleport_type)
          {
             unsigned int map_i = 0, tele_loc_i = 0;
@@ -1701,7 +1701,7 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
                TELEPORT_LOCATION *pTL = &maps_tele_sites[map_i].teleport_locations[tele_loc_i];
                for (int i = 0; i < 3; i++)
                   coordinates[i] =  pTL->coordinates[i];
-                     
+
                teleport_to = pTL->teleport_loc_name;
                teleport_type = 3;
             }
@@ -1712,27 +1712,27 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg) HaloSay(GenericMsg, exec_player_index);
-      
+
    if (teleport_type)
    {
       for (int i = 0; i < pi_found; i++)
       {
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
-         {   
+         {
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
             if (player_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                if (vehicle_object) player_object = vehicle_object;
-                           
+
                player_object->m_World[0] = coordinates[0];
                player_object->m_World[1] = coordinates[1];
                player_object->m_World[2] = coordinates[2] + 1 * i;
                succeded = TRUE;
-               
+
                switch (teleport_type)
                {
                   case 1:
@@ -1744,12 +1744,12 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
                         coordinates[1],
                         coordinates[2]);
                      break;
-                  
+
                   case 2:
                      SpecificMsg = L"%s has been teleported to %s";
                      player_object->m_World[2] += 1;//does float support ++?
                      break;
-                     
+
                   case 3:
                      SpecificMsg = L"%s has been teleported to \"%s\"";
                      break;
@@ -1760,7 +1760,7 @@ BOOL __fastcall Player::Teleport(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -1778,17 +1778,17 @@ BOOL __fastcall Player::Jump_Teleport(wchar_t *cmd_args, short exec_player_index
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    float coordinates[3];
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
-      
+
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
@@ -1797,20 +1797,20 @@ BOOL __fastcall Player::Jump_Teleport(wchar_t *cmd_args, short exec_player_index
 
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
             if (player_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                if (vehicle_object) player_object = vehicle_object;
-                           
-               for (int i = 0; i < 3; i++)    
-                  coordinates[i] = player_object->m_World[i];  
-                  
+
+               for (int i = 0; i < 3; i++)
+                  coordinates[i] = player_object->m_World[i];
+
                succeded = TRUE;
                SpecificMsg = L"%s's current coordinates is %.2fx %.2fy %.2fz";
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1830,19 +1830,19 @@ BOOL __fastcall Player::Jump_Teleport(wchar_t *cmd_args, short exec_player_index
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
                if (player_object)
-               {        
+               {
                   //if player is in a vehicle, use vehicle's coords_or_vectors
                   HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                   if (vehicle_object) player_object = vehicle_object;
-                              
-                  for (int i = 0; i < 3; i++)    
-                     player_object->m_World[i] += coordinates[i];  
-                     
+
+                  for (int i = 0; i < 3; i++)
+                     player_object->m_World[i] += coordinates[i];
+
                   succeded = TRUE;
                   SpecificMsg = L"%s's coordinates has been adjusted by %.2fx %.2fy %.2fz";
                }
@@ -1851,7 +1851,7 @@ BOOL __fastcall Player::Jump_Teleport(wchar_t *cmd_args, short exec_player_index
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1869,9 +1869,9 @@ BOOL __fastcall Player::Jump_Teleport(wchar_t *cmd_args, short exec_player_index
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg) HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -1879,17 +1879,17 @@ BOOL __fastcall Player::Velocity(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    float vectors[3];
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
-      
+
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
@@ -1898,20 +1898,20 @@ BOOL __fastcall Player::Velocity(wchar_t *cmd_args, short exec_player_index)
 
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
             if (player_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                if (vehicle_object) player_object = vehicle_object;
-                           
-               for (int i = 0; i < 3; i++)    
-                  vectors[i] = player_object->m_Velocity[i];  
-                  
+
+               for (int i = 0; i < 3; i++)
+                  vectors[i] = player_object->m_Velocity[i];
+
                succeded = TRUE;
                SpecificMsg = L"%s's current vector is %.2fx %.2fy %.2fz";
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1931,19 +1931,19 @@ BOOL __fastcall Player::Velocity(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
                if (player_object)
-               {        
+               {
                   //if player is in a vehicle, use vehicle's coords_or_vectors
                   HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                   if (vehicle_object) player_object = vehicle_object;
-                              
-                  for (int i = 0; i < 3; i++)    
-                     player_object->m_Velocity[i] = vectors[i];  
-                     
+
+                  for (int i = 0; i < 3; i++)
+                     player_object->m_Velocity[i] = vectors[i];
+
                   succeded = TRUE;
                   SpecificMsg = L"%s's vector has been changed to %.2fx %.2fy %.2fz";
                }
@@ -1952,7 +1952,7 @@ BOOL __fastcall Player::Velocity(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -1970,10 +1970,10 @@ BOOL __fastcall Player::Velocity(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -1981,23 +1981,23 @@ BOOL __fastcall Player::Ammo(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       int number;
-      
+
       //displayer info
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
             if(player_object)
             {
@@ -2013,7 +2013,7 @@ BOOL __fastcall Player::Ammo(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2029,7 +2029,7 @@ BOOL __fastcall Player::Ammo(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2050,7 +2050,7 @@ BOOL __fastcall Player::Ammo(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2066,10 +2066,10 @@ BOOL __fastcall Player::Ammo(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2077,23 +2077,23 @@ BOOL __fastcall Player::Battery(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       float fnumber;
-      
+
       //displayer info
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
             if(player_object)
             {
@@ -2109,7 +2109,7 @@ BOOL __fastcall Player::Battery(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2125,7 +2125,7 @@ BOOL __fastcall Player::Battery(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2146,7 +2146,7 @@ BOOL __fastcall Player::Battery(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2162,10 +2162,10 @@ BOOL __fastcall Player::Battery(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2173,23 +2173,23 @@ BOOL __fastcall Player::Health(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       float fnumber;
-      
+
       //displayer info
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
             if(player_object)
             {
@@ -2199,7 +2199,7 @@ BOOL __fastcall Player::Health(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2215,7 +2215,7 @@ BOOL __fastcall Player::Health(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2230,7 +2230,7 @@ BOOL __fastcall Player::Health(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2246,10 +2246,10 @@ BOOL __fastcall Player::Health(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2257,23 +2257,23 @@ BOOL __fastcall Player::Shield(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
       float fnumber;
-      
+
       //displayer info
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
             if(player_object)
             {
@@ -2283,7 +2283,7 @@ BOOL __fastcall Player::Shield(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2299,7 +2299,7 @@ BOOL __fastcall Player::Shield(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN* player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2314,7 +2314,7 @@ BOOL __fastcall Player::Shield(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2330,10 +2330,10 @@ BOOL __fastcall Player::Shield(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2342,13 +2342,13 @@ BOOL __fastcall Player::AFK(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             HaloCE_lib::OBJECT_TAG ObjTag = players[Player_Indexes[i]].PlayerObjTag;
@@ -2364,7 +2364,7 @@ BOOL __fastcall Player::AFK(wchar_t *cmd_args, short exec_player_index)
                   CALL DWORD PTR [PlayerDeath_func_address]
                   ADD ESP,4
                }
-               
+
                SpecificMsg = L"%s is now afk.";
             }
             else
@@ -2372,12 +2372,12 @@ BOOL __fastcall Player::AFK(wchar_t *cmd_args, short exec_player_index)
                players[Player_Indexes[i]].RespawnTimer = 30;//1 sec
                SpecificMsg = L"%s is no longer afk.";
             }
-            
+
             succeded = TRUE;
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2389,7 +2389,7 @@ BOOL __fastcall Player::AFK(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2399,37 +2399,37 @@ BOOL __fastcall Player::Team_Change(wchar_t *cmd_args, short exec_player_index)
    DWORD Team = 0;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL, *team_str;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             KillPlayer(Player_Indexes[i]);
-            
+
             Team = players[Player_Indexes[i]].Team;
             if (Team)
             {
                Team = 0;
                team_str = L"Red";
             }
-            else 
+            else
             {
                Team = 1;
                team_str = L"Blue";
             }
-             
+
             players[Player_Indexes[i]].Team = Team;
             succeded = TRUE;
-            
+
             SpecificMsg = L"%s has been switched to %s team.";
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2451,13 +2451,13 @@ BOOL __fastcall Player::Kick(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             if (Player_Indexes[i])
@@ -2473,14 +2473,14 @@ BOOL __fastcall Player::Kick(wchar_t *cmd_args, short exec_player_index)
                   _pi_char[0] = Player_Indexes[i] + '1';
                   _pi_char[1] = '\0';
                }
-               
+
                __asm
                {
                   LEA EAX,[_pi_char]
                   CALL DWORD PTR [sv_kick_func_address]
                   MOV succeded,TRUE
                }
-               
+
                SpecificMsg = L"%s has been kicked.";
             }
             else
@@ -2488,7 +2488,7 @@ BOOL __fastcall Player::Kick(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2500,7 +2500,7 @@ BOOL __fastcall Player::Kick(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-     
+
    return succeded;
 }
 
@@ -2509,20 +2509,20 @@ BOOL __fastcall Player::Ban(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             if (Player_Indexes[i])
             {
                char *ban_params[2];
                char player_index_char[3] = {'\0','\0','\0'};
-               
+
                if (Player_Indexes[i] > 8)
                {
                   player_index_char[0] = '1';
@@ -2530,12 +2530,12 @@ BOOL __fastcall Player::Ban(wchar_t *cmd_args, short exec_player_index)
                }
                else
                   player_index_char[0] = Player_Indexes[i] + '1';
-               
+
                char dhms_chars = '\0';
-               
+
                ban_params[0] = player_index_char;
                ban_params[1] = &dhms_chars;
-               
+
                __asm
                {
                   LEA ECX,[ban_params]
@@ -2543,7 +2543,7 @@ BOOL __fastcall Player::Ban(wchar_t *cmd_args, short exec_player_index)
                   CALL DWORD PTR [sv_ban_func_address]
                   MOV succeded,TRUE
                }
-               
+
                SpecificMsg = L"%s has been banned.";
             }
             else
@@ -2551,7 +2551,7 @@ BOOL __fastcall Player::Ban(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2563,7 +2563,7 @@ BOOL __fastcall Player::Ban(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -2572,13 +2572,13 @@ BOOL __fastcall Player::Kill(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             if (KillPlayer(Player_Indexes[i]))
@@ -2596,7 +2596,7 @@ BOOL __fastcall Player::Kill(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2608,7 +2608,7 @@ BOOL __fastcall Player::Kill(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-     
+
    return succeded;
 }
 
@@ -2617,13 +2617,13 @@ BOOL __fastcall Player::Eject(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2633,7 +2633,7 @@ BOOL __fastcall Player::Eject(wchar_t *cmd_args, short exec_player_index)
                if (vehicle_object)
                {
                   HaloCE_lib::OBJECT_TAG PlayerObjTag = players[Player_Indexes[i]].PlayerObjTag;
-                  __asm 
+                  __asm
                   {
                      MOV EAX,PlayerObjTag
                      CALL UnitExitVehicle_func_address
@@ -2649,7 +2649,7 @@ BOOL __fastcall Player::Eject(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2661,7 +2661,7 @@ BOOL __fastcall Player::Eject(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-   
+
    return succeded;
 }
 BOOL __fastcall Player::Flip_Vehicle(wchar_t *cmd_args, short exec_player_index)
@@ -2669,13 +2669,13 @@ BOOL __fastcall Player::Flip_Vehicle(wchar_t *cmd_args, short exec_player_index)
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-         
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
-      { 
+      {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2692,12 +2692,12 @@ BOOL __fastcall Player::Flip_Vehicle(wchar_t *cmd_args, short exec_player_index)
                   //wierd but its really "m_LowerRot"
                   player_object->m_Scale[0] = 0;
                   player_object->m_Scale[1] = 0;
-                  
+
                   float z_axis = player_object->m_Scale[2];
                   //flip 180
                   if (z_axis < 0) z_axis = 1;
                   else z_axis = -1;
-                  
+
                   player_object->m_Scale[2] = z_axis;
                   succeded = TRUE;
                   SpecificMsg = L"%s's vehicle has been fliped 180°.";
@@ -2710,7 +2710,7 @@ BOOL __fastcall Player::Flip_Vehicle(wchar_t *cmd_args, short exec_player_index)
          }
          else
             SpecificMsg = FailLowAdminLvl;
-               
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -2722,7 +2722,7 @@ BOOL __fastcall Player::Flip_Vehicle(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-   
+
    return succeded;
 }
 
@@ -2730,20 +2730,20 @@ BOOL __fastcall Player::Admin(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-      
+
    short Player_Indexes[16];
    int buffer_num = 0, pi_found = 0;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
-      
+
       if (!*cmd_args)
       {
          succeded = TRUE;
          for (int i = 0; i < pi_found; i++)
-         { 
+         {
             HaloSay(
                L"%s's current admin level is %u.",
                -1,
@@ -2757,9 +2757,9 @@ BOOL __fastcall Player::Admin(wchar_t *cmd_args, short exec_player_index)
          if (TempAdmin[exec_player_index] >= admin_level)
          {
             for (int i = 0; i < pi_found; i++)
-            { 
+            {
                wchar_t *SpecificMsg = NULL;
-               
+
                if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
                {
                   if (Player_Indexes[i])//same as != 0
@@ -2773,7 +2773,7 @@ BOOL __fastcall Player::Admin(wchar_t *cmd_args, short exec_player_index)
                }
                else
                   SpecificMsg = FailLowAdminLvl;
-                  
+
                if (SpecificMsg)
                {
                   HaloSay(
@@ -2792,10 +2792,10 @@ BOOL __fastcall Player::Admin(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-   
+
    return succeded;
 }
 
@@ -2804,7 +2804,7 @@ BOOL __fastcall Player::Set_Teleport_Loc(wchar_t *cmd_args, short exec_player_in
    BOOL succeded = FALSE;
    TELEPORT_LOCATION tele_site;
    wchar_t *GenericMsg = NULL;
-   
+
    short Player_Index;
    int pi_found = 1;
    int arg_len;
@@ -2818,51 +2818,51 @@ BOOL __fastcall Player::Set_Teleport_Loc(wchar_t *cmd_args, short exec_player_in
          wchar_t *cmd_w_ptr = cmd_args;
          while (*cmd_w_ptr++)
             if (*cmd_w_ptr == ' ') space_found = true;
-         
+
          if (!space_found)
          {
             int i = 0; wchar_t wchar;
-            do 
+            do
             {
                wchar = cmd_args[i];
                tele_site.teleport_loc_name[i] = wchar;
             }
             while (wchar && i++ < TELE_LOC_NAME_SIZE);
-            
+
             //add null at end if too long
             tele_site.teleport_loc_name[TELE_LOC_NAME_SIZE - 1] = '\0';
-      
-         
+
+
             wchar_t *SpecificMsg = NULL;
-            
+
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Index);
             if (player_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                if (vehicle_object) player_object = vehicle_object;
-                              
+
                for (int i = 0; i < 3; i++)
                   tele_site.coordinates[i] = player_object->m_World[i];
-                     
+
                unsigned int map_i = 0, tele_loc_i = 0;
                if (!FindMapIndex(&maps_tele_sites, Current_Map_Str, map_i))
                {
                   MAPS map_loc;
-                        
+
                   for (int i = 0; i < MAP_STR_SIZE; i++)
                      map_loc.map_name[i] = Current_Map_Str[i];
-                           
+
                   maps_tele_sites.push_back(map_loc);
                   map_i = maps_tele_sites.size() - 1;
                }
-                     
+
                //if the tele site exists, overwrite it
                if (FindTeleLocNameIndex(&maps_tele_sites[map_i].teleport_locations, tele_site.teleport_loc_name, tele_loc_i))
                   maps_tele_sites[map_i].teleport_locations[tele_loc_i] = tele_site;
                else
                   maps_tele_sites[map_i].teleport_locations.push_back(tele_site);
-                  
+
                WriteLocationsToFile(LocationsFilePath, &maps_tele_sites);
                succeded = TRUE;
                //unfortunatly the location name comes first, but in the error messages, player comes first
@@ -2874,7 +2874,7 @@ BOOL __fastcall Player::Set_Teleport_Loc(wchar_t *cmd_args, short exec_player_in
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2891,10 +2891,10 @@ BOOL __fastcall Player::Set_Teleport_Loc(wchar_t *cmd_args, short exec_player_in
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-         
+
    return succeded;
 }
 
@@ -2913,7 +2913,7 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
@@ -2921,20 +2921,20 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
                {
                   HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                   if (vehicle_object) player_object = vehicle_object;
-                  
+
                   float coords[3];
                   coords[0] = player_object->m_World[0] + 1;
                   coords[1] = player_object->m_World[1] + 1;
                   coords[2] = player_object->m_World[2] + 0.5f;
-                  
+
                   __asm
                   {
                      MOV ECX,DWORD PTR [ObjTagList_ptr_address]
                      MOV ECX, DWORD PTR [ECX]
-                     
+
                      MOV EDX,DWORD PTR [ECX+174h]
                      MOV EDX,DWORD PTR [EDX+0Ch]
-                     
+
                      CMP EDX,0xFF
                      JE SHORT biped_inval
                      ;//6E2280->addr+168h]->addr+1Ch]-> player obj type tag
@@ -2942,7 +2942,7 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
                      ;//__fastcall params
                      MOV EDX,DWORD PTR [ECX+1Ch]
                      LEA ECX,[coords]
-                     
+
                      XOR ESI,ESI
                      continue_biped_create_loop:
                      CMP ESI,how_many_to_spawn
@@ -2951,12 +2951,12 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
                      INC ESI
                      JMP SHORT continue_biped_create_loop
                      //exit_biped_create_loop:
-                     
+
                      biped_inval:
                      MOV ECX,DWORD PTR [FailBadSpawn]
                      MOV SpecificMsg,ECX
                      JMP SHORT biped_failed
-                     
+
                      bipeds_spawned:
                      MOV succeded,TRUE
                   }
@@ -2968,7 +2968,7 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -2983,10 +2983,10 @@ BOOL __fastcall Player::Spawn_Biped(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-      
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index);
-    
+
    return succeded;
 }
 
@@ -3004,18 +3004,18 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
          sizeof(WORD),
          PAGE_EXECUTE_READWRITE,
          &dwOldProtect))
-      {   
+      {
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                *Player0_index = Player_Indexes[i];
                //doesnt spawn on some custom maps
                //__asm CALL SpawnHog_func_address
                __asm
-               {  
+               {
                   //DWORD objlist = *(DWORD*)ObjTagList_ptr_address;
                   MOV ECX,DWORD PTR [ObjTagList_ptr_address]
                   MOV ECX, DWORD PTR [ECX]
@@ -3041,7 +3041,7 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
                   MOV ECX,DWORD PTR [FailPlyrNtSpwn]
                   MOV SpecificMsg,ECX
                   JMP SHORT hog_failed
-                  
+
                   hog_val_player:
                   TEST AX,AX
                   JNZ SHORT hog_spawned
@@ -3049,7 +3049,7 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
                   MOV ECX,DWORD PTR [FailBadSpawn]
                   MOV SpecificMsg,ECX
                   JMP SHORT hog_failed
-                  
+
                   hog_spawned:
                   MOV succeded,TRUE
                }
@@ -3058,7 +3058,7 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3067,7 +3067,7 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
                   players[Player_Indexes[i]].PlayerName0);
             }
          }
-         
+
          *Player0_index = 0;//change back to 0 when finished
          VirtualProtect(
             (LPVOID)Player0_index,
@@ -3078,7 +3078,7 @@ BOOL __fastcall Player::Spawn_Hog(wchar_t *cmd_args, short exec_player_index)
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-      
+
    return succeded;
 }
 
@@ -3096,11 +3096,11 @@ BOOL __fastcall Player::Spawn_All_Vehicles(wchar_t *cmd_args, short exec_player_
          sizeof(WORD),
          PAGE_EXECUTE_READWRITE,
          &dwOldProtect))
-      {   
+      {
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                //[40848BF0+i*10]= vehicle tag
@@ -3137,7 +3137,7 @@ BOOL __fastcall Player::Spawn_All_Vehicles(wchar_t *cmd_args, short exec_player_
                   MOV ECX,DWORD PTR [FailPlyrNtSpwn]
                   MOV SpecificMsg,ECX
                   JMP SHORT vehs_failed
-                  
+
                   vehs_val_player:
                   TEST AX,AX
                   JNZ SHORT vehs_spawned
@@ -3145,17 +3145,17 @@ BOOL __fastcall Player::Spawn_All_Vehicles(wchar_t *cmd_args, short exec_player_
                   MOV ECX,DWORD PTR [FailBadSpawn]
                   MOV SpecificMsg,ECX
                   JMP SHORT vehs_failed
-                  
+
                   vehs_spawned:
                   MOV succeded,TRUE
                }
-               
+
                SpecificMsg = L"Vehicles spawned next to %s";
                __asm vehs_failed:
             }
             else
                SpecificMsg = FailLowAdminLvl;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3164,7 +3164,7 @@ BOOL __fastcall Player::Spawn_All_Vehicles(wchar_t *cmd_args, short exec_player_
                   players[Player_Indexes[i]].PlayerName0);
             }
          }
-         
+
          *Player0_index = 0;//change back to 0 when finished
          VirtualProtect(
             (LPVOID)Player0_index,
@@ -3175,7 +3175,7 @@ BOOL __fastcall Player::Spawn_All_Vehicles(wchar_t *cmd_args, short exec_player_
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-    
+
    return succeded;
 }
 
@@ -3193,11 +3193,11 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
          sizeof(WORD),
          PAGE_EXECUTE_READWRITE,
          &dwOldProtect))
-      {    
+      {
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                *Player0_index = Player_Indexes[i];
@@ -3205,7 +3205,7 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
                {
                   //DWORD objlist = *(DWORD*)ObjTagList_ptr_address;
                   MOV ECX,DWORD PTR [ObjTagList_ptr_address]
-                  MOV ECX, DWORD PTR [ECX]    
+                  MOV ECX, DWORD PTR [ECX]
                   //DWORD num_of_objs = *(DWORD*)(objlist+0x14C);
                   //if (num_of_objs)
                   MOV EAX,DWORD PTR [ECX+14Ch]
@@ -3225,7 +3225,7 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
                   MOV ECX,DWORD PTR [FailPlyrNtSpwn]
                   MOV SpecificMsg,ECX
                   JMP SHORT weps_failed
-                  
+
                   weps_val_player:
                   TEST AX,AX
                   JNZ SHORT weps_spawned
@@ -3233,17 +3233,17 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
                   MOV ECX,DWORD PTR [FailBadSpawn]
                   MOV SpecificMsg,ECX
                   JMP SHORT weps_failed
-                  
+
                   weps_spawned:
                   MOV succeded,1
                }
-               
+
                SpecificMsg = L"Weapons spawned next to %s";
                __asm weps_failed:
             }
             else
                SpecificMsg = FailLowAdminLvl;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3252,7 +3252,7 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
                   players[Player_Indexes[i]].PlayerName0);
             }
          }
-         
+
          *Player0_index = 0;//change back to 0 when finished
          VirtualProtect(
             (LPVOID)Player0_index,
@@ -3263,7 +3263,7 @@ BOOL __fastcall Player::Spawn_All_Weapons(wchar_t *cmd_args, short exec_player_i
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-         
+
    return succeded;
 }
 
@@ -3285,7 +3285,7 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
          for (int i = 0; i < pi_found; i++)
          {
             wchar_t *SpecificMsg = NULL;
-                  
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                *Player0_index = Player_Indexes[i];
@@ -3293,7 +3293,7 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
                {
                   //DWORD objlist = *(DWORD*)ObjTagList_ptr_address;
                   MOV ECX,DWORD PTR [ObjTagList_ptr_address]
-                  MOV ECX, DWORD PTR [ECX]    
+                  MOV ECX, DWORD PTR [ECX]
                   //DWORD num_of_objs = *(DWORD*)(objlist+0x158);
                   //if (num_of_objs)
                   MOV EAX,DWORD PTR [ECX+158h]
@@ -3313,7 +3313,7 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
                   MOV ECX,DWORD PTR [FailPlyrNtSpwn]
                   MOV SpecificMsg,ECX
                   JMP SHORT pwrups_failed
-                  
+
                   pwrups_val_player:
                   TEST AX,AX
                   JNZ SHORT pwrups_spawned
@@ -3321,17 +3321,17 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
                   MOV ECX,DWORD PTR [FailBadSpawn]
                   MOV SpecificMsg,ECX
                   JMP SHORT pwrups_failed
-                  
+
                   pwrups_spawned:
                   MOV succeded,TRUE
                }
-               
+
                SpecificMsg = L"Powerups spawned next to %s";
                __asm pwrups_failed:
             }
             else
                SpecificMsg = FailLowAdminLvl;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3339,9 +3339,9 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
                   exec_player_index,
                   players[Player_Indexes[i]].PlayerName0);
             }
-            
+
          }
-         
+
          *Player0_index = 0;//change back to 0 when finished
          VirtualProtect(
             (LPVOID)Player0_index,
@@ -3352,7 +3352,7 @@ BOOL __fastcall Player::Spawn_All_Powerups(wchar_t *cmd_args, short exec_player_
    }
    else
       HaloSay(FailPlyrNtFnd, exec_player_index);
-         
+
    return succeded;
 }
 
@@ -3371,29 +3371,29 @@ BOOL __fastcall Player::Copy_Vehicle(wchar_t *cmd_args, short exec_player_index)
       {
          HaloCE_lib::SPARTAN *player2_object = GetPlayerObj(player2_index);
          if (player2_object)
-         {        
+         {
             //if player is in a vehicle, use vehicle's coords_or_vectors
             HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player2_object);
             if (vehicle_object) player2_object = vehicle_object;
-            
+
             float coords[3];
             coords[0] = player2_object->m_World[0] + 1;
             coords[1] = player2_object->m_World[1] + 1;
             coords[2] = player2_object->m_World[2] + 0.5f;
-                  
+
             for (int i = 0; i < pi_found; i++)
             {
                wchar_t *SpecificMsg = NULL;
-               
+
                if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
                {
-                  
+
                   HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
                   if (player_object)
                   {
                      //if player is in a vehicle, use vehicle's coords_or_vectors
                      HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
-                     if (vehicle_object) 
+                     if (vehicle_object)
                      {
                         __asm
                         {
@@ -3404,7 +3404,7 @@ BOOL __fastcall Player::Copy_Vehicle(wchar_t *cmd_args, short exec_player_index)
                            CALL CreateObject
                            MOV succeded,TRUE
                         }
-                        
+
                         HaloSay(
                            L"%s's vehicle has been spawned next to %s",
                            exec_player_index,
@@ -3419,7 +3419,7 @@ BOOL __fastcall Player::Copy_Vehicle(wchar_t *cmd_args, short exec_player_index)
                }
                else
                   SpecificMsg = FailLowAdminLvl;
-            
+
                if (SpecificMsg)
                {
                   HaloSay(
@@ -3437,10 +3437,10 @@ BOOL __fastcall Player::Copy_Vehicle(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-      
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index, players[player2_index].PlayerName0);
-         
+
    return succeded;
 }
 
@@ -3459,35 +3459,35 @@ BOOL __fastcall Player::Copy_Weapon(wchar_t *cmd_args, short exec_player_index)
       {
          HaloCE_lib::SPARTAN *player2_object = GetPlayerObj(player2_index);
          if (player2_object)
-         {        
+         {
             //if player is in a vehicle, use vehicle's coords_or_vectors
             HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player2_object);
             if (vehicle_object) player2_object = vehicle_object;
-            
+
             float coords[3];
             coords[0] = player2_object->m_World[0] + 1;
             coords[1] = player2_object->m_World[1] + 1;
             coords[2] = player2_object->m_World[2] + 0.5f;
-                  
+
             for (int i = 0; i < pi_found; i++)
             {
                wchar_t *SpecificMsg = NULL;
-               
+
                if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
                {
-                  
+
                   HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
                   if (player_object)
                   {
                      short weapon_index = player_object->WeaponTag.Index;
-         
+
                      //if player is in a vehicle, use vehicle's weapon
                      //doesn't work on vehicle weapons
                      //short veh_wep_index = player_object->VehicleWeaponTag.Index;
                      //if (veh_wep_index != -1) weapon_index = veh_wep_index;
-                     
+
                      DWORD weapon_obj = GetObj(weapon_index);
-                     if (weapon_obj) 
+                     if (weapon_obj)
                      {
                         __asm
                         {
@@ -3498,7 +3498,7 @@ BOOL __fastcall Player::Copy_Weapon(wchar_t *cmd_args, short exec_player_index)
                            CALL CreateObject
                            MOV succeded,TRUE
                         }
-                        
+
                         HaloSay(
                            L"%s's weapon has been spawned next to %s",
                            exec_player_index,
@@ -3513,7 +3513,7 @@ BOOL __fastcall Player::Copy_Weapon(wchar_t *cmd_args, short exec_player_index)
                }
                else
                   SpecificMsg = FailLowAdminLvl;
-            
+
                if (SpecificMsg)
                {
                   HaloSay(
@@ -3531,10 +3531,10 @@ BOOL __fastcall Player::Copy_Weapon(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-      
+
    if (GenericMsg)
       HaloSay(GenericMsg, exec_player_index, players[player2_index].PlayerName0);
-         
+
    return succeded;
 }
 
@@ -3542,7 +3542,7 @@ BOOL __fastcall Player::Destroy_Objects_Mode(wchar_t *cmd_args, short exec_playe
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL;
-   
+
    int enable;
    if (!*cmd_args)
    {
@@ -3558,9 +3558,9 @@ BOOL __fastcall Player::Destroy_Objects_Mode(wchar_t *cmd_args, short exec_playe
    }
    else
       GenericMsg = FailInvalNum;
-      
-   HaloSay(GenericMsg, exec_player_index, enable); 
-         
+
+   HaloSay(GenericMsg, exec_player_index, enable);
+
    return succeded;
 }
 
@@ -3569,23 +3569,23 @@ BOOL __fastcall Player::Destroy_Weapon(wchar_t *cmd_args, short exec_player_inde
    BOOL succeded = FALSE;
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    if (ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found))
    {
       for (int i = 0; i < pi_found; i++)
       {
          wchar_t *SpecificMsg = NULL;
-         
+
          if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
          {
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
             if (player_object)
-            {        
+            {
                HaloCE_lib::OBJECT_TAG WepObjTag = player_object->WeaponTag;
                //use vehicle turret if valid tag
                HaloCE_lib::OBJECT_TAG VehWepObjTag = player_object->VehicleWeaponTag;
                if (VehWepObjTag.Tag != -1) WepObjTag = VehWepObjTag;
-               
+
                if (WepObjTag.Tag != -1)
                {
                   __asm
@@ -3604,7 +3604,7 @@ BOOL __fastcall Player::Destroy_Weapon(wchar_t *cmd_args, short exec_player_inde
          }
          else
             SpecificMsg = FailLowAdminLvl;
-            
+
          if (SpecificMsg)
          {
             HaloSay(
@@ -3615,8 +3615,8 @@ BOOL __fastcall Player::Destroy_Weapon(wchar_t *cmd_args, short exec_player_inde
       }
    }
    else
-      HaloSay(FailPlyrNtFnd, exec_player_index); 
-      
+      HaloSay(FailPlyrNtFnd, exec_player_index);
+
    return succeded;
 }
 
@@ -3626,7 +3626,7 @@ BOOL __fastcall Player::Say(wchar_t *cmd_args, short exec_player_index)
    short Player_Indexes[16];
    int pi_found = 0;
    wchar_t *msg_to = cmd_args, *GenericMsg = NULL;;
-   
+
    if (*ServerType == HOST)
    {
       int arg_len;
@@ -3640,7 +3640,7 @@ BOOL __fastcall Player::Say(wchar_t *cmd_args, short exec_player_index)
          else
          {
             msg_to[cmd_args - msg_to] = 0;//add null terminator
-            
+
             wchar_t *sv_buffer = &HaloSay_server_buffer[SV_NAME_SIZE];
             swprintf_s(
                sv_buffer,
@@ -3649,7 +3649,7 @@ BOOL __fastcall Player::Say(wchar_t *cmd_args, short exec_player_index)
                players[exec_player_index].PlayerName0,
                msg_to,
                ++cmd_args);
-               
+
             CHAT_INFO chat_info;
             chat_info.ChatType = Server;
             chat_info.From_PlayerIndex = 0;
@@ -3657,14 +3657,14 @@ BOOL __fastcall Player::Say(wchar_t *cmd_args, short exec_player_index)
             for (int i = 0; i < pi_found; i++)
             {
                ServerSay(chat_info, players[Player_Indexes[i]].PlayerChatIndex);
-               
+
                HaloSay(
                   L"Message sent to %s",
                   exec_player_index,
                   players[Player_Indexes[i]].PlayerName0);
             }
          }
-         
+
          succeded = TRUE;
       }
       else
@@ -3672,9 +3672,9 @@ BOOL __fastcall Player::Say(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailSvCmd;
-      
-   if (GenericMsg) HaloSay(GenericMsg, exec_player_index); 
-         
+
+   if (GenericMsg) HaloSay(GenericMsg, exec_player_index);
+
    return succeded | DO_NOT_SEND_MSG;
 }
 
@@ -3682,17 +3682,17 @@ BOOL __fastcall Player::ObjectScale(wchar_t *cmd_args, short exec_player_index)
 {
    BOOL succeded = FALSE;
    wchar_t *GenericMsg = NULL, *SpecificMsg = NULL;
-      
+
    short Player_Indexes[16];
    int pi_found = 0;
-   
+
    float scale;
-   
+
    int arg_len;
    if ((arg_len = ParseCMDStrPlayers(cmd_args, Player_Indexes, pi_found)))
    {
       cmd_args += arg_len;
-      
+
       if (!*cmd_args)
       {
          for (int i = 0; i < pi_found; i++)
@@ -3701,17 +3701,17 @@ BOOL __fastcall Player::ObjectScale(wchar_t *cmd_args, short exec_player_index)
 
             HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
             if (player_object)
-            {        
+            {
                //if player is in a vehicle, use vehicle's coords_or_vectors
                HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                if (vehicle_object) player_object = vehicle_object;
-                  
+
                succeded = TRUE;
                SpecificMsg = L"%s's current object scale is %.2f%%";
             }
             else
                SpecificMsg = FailPlyrNtSpwn;
-            
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3727,18 +3727,18 @@ BOOL __fastcall Player::ObjectScale(wchar_t *cmd_args, short exec_player_index)
          for (int i = 0; i < pi_found; i++)
          {
             SpecificMsg = NULL;
-            
+
             if (TempAdmin[exec_player_index] >= TempAdmin[Player_Indexes[i]])
             {
                HaloCE_lib::SPARTAN *player_object = GetPlayerObj(Player_Indexes[i]);
                if (player_object)
-               {        
+               {
                   //if player is in a vehicle, use vehicle's coords_or_vectors
                   HaloCE_lib::SPARTAN *vehicle_object = (HaloCE_lib::SPARTAN*)GetPlayerVehObj(player_object);
                   if (vehicle_object) player_object = vehicle_object;
-                              
-                  player_object->obj_scale = scale;  
-                     
+
+                  player_object->obj_scale = scale;
+
                   succeded = TRUE;
                   SpecificMsg = L"%s's object scale has been changed to %.2f%%";
                }
@@ -3747,7 +3747,7 @@ BOOL __fastcall Player::ObjectScale(wchar_t *cmd_args, short exec_player_index)
             }
             else
                SpecificMsg = FailLowAdminLvl;
-               
+
             if (SpecificMsg)
             {
                HaloSay(
@@ -3763,8 +3763,8 @@ BOOL __fastcall Player::ObjectScale(wchar_t *cmd_args, short exec_player_index)
    }
    else
       GenericMsg = FailPlyrNtFnd;
-   
+
    if (GenericMsg) HaloSay(GenericMsg, exec_player_index);
-      
+
    return succeded;
 }
