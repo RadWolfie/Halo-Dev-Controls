@@ -1,6 +1,6 @@
 /********************************************************************************
 	 -- Halo Dev Controls
-    Copyright © 2011 Jesus7Freak
+    Copyright Â© 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -740,7 +740,7 @@ namespace CMDsLib
       {//17
          L"Flip Vehicle",
          L"/flip [pExpression]",
-         L"Flips a vehicle 180°, up-right or down"
+         L"Flips a vehicle 180Â°, up-right or down"
       },
       {//18
          L"Admin",

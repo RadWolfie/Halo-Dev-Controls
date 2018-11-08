@@ -1,6 +1,6 @@
 /********************************************************************************
 	 -- Read Write Memory Tools
-    Copyright © 2011 Jesus7Freak
+    Copyright Â© 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 /********************************************************************************
 	 -- Halo Dev Controls
-    Copyright © 2011 Jesus7Freak
+    Copyright Â© 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -113,8 +113,8 @@ BEGIN
     CONTROL         "OK",IDOK,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,108,151,36,17,WS_EX_TRANSPARENT
     LTEXT           "Halo Dev Controls",IDC_ABOUT_NAME,90,5,86,9,NOT WS_GROUP,WS_EX_TRANSPARENT
     LTEXT           "Version: ",IDC_ABOUT_VERSION,90,20,80,9,NOT WS_GROUP,WS_EX_TRANSPARENT
-    CTEXT           "Beta Testers:\r\nShadow\r\nAoO Aurora\r\nN®Þ»Jedi\r\nÇAG»Dark_Špyrø\r\nMarko Ramius\r\nRad! ",IDC_ABOUT_CREDITS,8,49,75,79,NOT WS_GROUP,WS_EX_TRANSPARENT
-    CTEXT           "Thanks to:\r\nJesus for salvation,\r\nBelieve in Him and\r\nhave eternal Life!\r\nPatrícia <3\r\nBungie\r\nPatrickssj6\r\nOxide\r\nOpsY",IDC_ABOUT_THANKS,161,26,84,111,NOT WS_GROUP,WS_EX_TRANSPARENT
+    CTEXT           "Beta Testers:\r\nShadow\r\nAoO Aurora\r\nNÂ®ÃžÂ»Jedi\r\nÃ‡AGÂ»Dark_Å pyrÃ¸\r\nMarko Ramius\r\nRad! ",IDC_ABOUT_CREDITS,8,49,75,79,NOT WS_GROUP,WS_EX_TRANSPARENT
+    CTEXT           "Thanks to:\r\nJesus for salvation,\r\nBelieve in Him and\r\nhave eternal Life!\r\nPatrÃ­cia <3\r\nBungie\r\nPatrickssj6\r\nOxide\r\nOpsY",IDC_ABOUT_THANKS,161,26,84,111,NOT WS_GROUP,WS_EX_TRANSPARENT
     LTEXT           "Player Commands based on Devicator",IDC_ABOUT_PLAYER_CMDS,9,135,150,15,NOT WS_GROUP,WS_EX_TRANSPARENT
     CTEXT           "Created By:\r\nJesus7Freak",IDC_ABOUT_AUTHOR,98,70,59,38,NOT WS_GROUP,WS_EX_TRANSPARENT
 END
