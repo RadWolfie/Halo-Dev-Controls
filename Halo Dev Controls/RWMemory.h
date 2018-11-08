@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Read Write Memory Tools
+    -- Read Write Memory Tools
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,11 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    RWMemory.h
-	Project: Read Write Memory Tools
-	Author:  Jesus7Freak
-	Date:    10/29/2011
-	Version: 2.30
+    File:    RWMemory.h
+    Project: Read Write Memory Tools
+    Author:  Jesus7Freak
+    Date:    10/29/2011
+    Version: 2.30
 *********************************************************************************/
 #pragma once
 // Exclude rarely-used stuff from Windows headers

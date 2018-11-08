@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Read Write Memory Tools
+    -- Read Write Memory Tools
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,11 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    RWMemory.cpp
-	Project: Read Write Memory Tools
-	Author:  Jesus7Freak, RadWolfie
-	Date:    10/30/2016
-	Version: 2.41
+    File:    RWMemory.cpp
+    Project: Read Write Memory Tools
+    Author:  Jesus7Freak, RadWolfie
+    Date:    10/30/2016
+    Version: 2.41
 *********************************************************************************/
 //uses both ASCII and UNICODE functions
 #ifdef UNICODE
@@ -1124,11 +1124,11 @@ namespace ReadWriteMemoryTools
    HMODULE RWMemory::InjectMemoryModule(const LPVOID DLLData)
    {
       PIMAGE_DOS_HEADER dos_header;
-	   PIMAGE_NT_HEADERS nt_header;
-	   BYTE *code, *headers;
-	   SIZE_T locationDelta;
-	   DllEntryProc DllEntry;
-	   BOOL successfull;
+      PIMAGE_NT_HEADERS nt_header;
+      BYTE *code, *headers;
+      SIZE_T locationDelta;
+      DllEntryProc DllEntry;
+      BOOL successfull;
 
       still working on...
       return hLibModule;

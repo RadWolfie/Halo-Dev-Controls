@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    HaloLib.h
-	Project: Halo Dev Controls and HDC
-	Authors: Steve(Del), Abyll, Rad!, and Jesus7Freak
-	Date:    11/22/2011
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    HaloLib.h
+    Project: Halo Dev Controls and HDC
+    Authors: Steve(Del), Abyll, Rad!, and Jesus7Freak
+    Date:    11/22/2011
+    Game:    Halo and Halo Custom Edition
+    Version: all
 
    credit to Steve(Del)... for the player info structures
    Abyll, and Rad! for further functionality of halo structures
@@ -168,7 +168,7 @@ namespace HaloCE_lib
    struct CAMERA_DATA
    {
       DWORD unknown;       //always 1?
-	   float m_fWorld[3];
+      float m_fWorld[3];
    };
 
    extern ADDRESS_SIG Local_Player_ptr_addr_sig;
@@ -178,11 +178,11 @@ namespace HaloCE_lib
       WORD Unknown00;
       WORD Unknown01;//+0x2
       DWORD Unknown02[3];//+0x4
-	   WORD ObjectIndex;//+0x10
-	   WORD ObjectID;//+0x12
-	   BYTE Jumping;//+0x14  //jumping = 2, standing = 0
-	   BYTE Unknown03[7];//+0x15
-	   float m_fRot[3];//+0x1C
+      WORD ObjectIndex;//+0x10
+      WORD ObjectID;//+0x12
+      BYTE Jumping;//+0x14  //jumping = 2, standing = 0
+      BYTE Unknown03[7];//+0x15
+      float m_fRot[3];//+0x1C
    };
 
    struct STATIC_PLAYER//512bytes 0x402AAFCC
@@ -212,52 +212,52 @@ namespace HaloCE_lib
       WORD ActiveCamoTimer;//+0x68
       WORD Unknown4;//+0x6A
       float SpeedModifier;//+0x6C               // Normal = 1
-      DWORD	UnknownIdent3[4];//+0x70
-	   long	Unknown5;//+0x80
-	   long	LastDeathTime;//+0x84		// since game start(0)
-	   BYTE	Unknown6[18];//+0x88
-	   short	KillsCount;//+0x9A
-	   BYTE	Unknown7[6];//+0xA2
-	   short	AssistsCount;//+0xA8
-	   BYTE	Unknown8[8];//+0xAA
-	   short	BetrayedCount;//+0xB2
-	   short	DeathsCount;//+0xB4 actually //+0xB0
-	   short	SuicideCount;//+0xB6
-	   BYTE	Unknown9[18];
-	   short	FlagStealCount;
-	   short	FlagReturnCount;
-	   short	FlagCaptureCount;
-	   BYTE	Unknown10[6];
-	   DWORD	UnknownIdent4;
-	   BYTE	Unknown11[8];
+      DWORD UnknownIdent3[4];//+0x70
+      long Unknown5;//+0x80
+      long LastDeathTime;//+0x84       // since game start(0)
+      BYTE Unknown6[18];//+0x88
+      short KillsCount;//+0x9A
+      BYTE Unknown7[6];//+0xA2
+      short AssistsCount;//+0xA8
+      BYTE Unknown8[8];//+0xAA
+      short BetrayedCount;//+0xB2
+      short DeathsCount;//+0xB4 actually //+0xB0
+      short SuicideCount;//+0xB6
+      BYTE Unknown9[18];
+      short FlagStealCount;
+      short FlagReturnCount;
+      short FlagCaptureCount;
+      BYTE Unknown10[6];
+      DWORD UnknownIdent4;
+      BYTE Unknown11[8];
       short Ping;//+0xDC
-      BYTE	Unknown12[14];
-	   DWORD	Unknown13;//+0xDE
-	   long	Unknown14;
-	   long	SomeTime;
-	   float m_World[3];//+0x;
-	   DWORD	UnknownIdent6;
-	   BYTE	Unknown111[20];
-	   BYTE	Melee		:	1;
-	   BYTE	Action		:	1;
-	   BYTE	UnknownBit	:   1;
-	   BYTE	Flashlight	:	1;
-	   BYTE	UnknownBit1	:	4;
-	   BYTE	UnknownBit2	:	5;
-	   BYTE	Reload		:	1;
-	   BYTE	UnknownBit3	:	2;
-	   BYTE	Unknown15[26];
-	   float m_LowerRot[3];//+0x;		// Yaw, Pitch (again, in radians.
-	   float	ForwardVelocityMultiplier;
-	   float	HorizontalVelocityMultiplier;
-	   float	RateOfFireVelocityMultiplier;
-	   short	HeldWeaponIndex;
-	   short	GrenadeIndex;
-	   BYTE	Unknown16[4];
-	   float	LookVect[3];
-	   BYTE	Unknown17[16];
-	   float m_World_delay[3];	// Oddly enough... it matches the world vect, but seems to lag behind (Possibly what the client reports is _its_ world coord?)
-	   BYTE	Unknown18[128];
+      BYTE Unknown12[14];
+      DWORD Unknown13;//+0xDE
+      long Unknown14;
+      long SomeTime;
+      float m_World[3];//+0x;
+      DWORD UnknownIdent6;
+      BYTE Unknown111[20];
+      BYTE Melee       :   1;
+      BYTE Action      :   1;
+      BYTE UnknownBit  :   1;
+      BYTE Flashlight  :   1;
+      BYTE UnknownBit1 :   4;
+      BYTE UnknownBit2 :   5;
+      BYTE Reload      :   1;
+      BYTE UnknownBit3 :   2;
+      BYTE Unknown15[26];
+      float m_LowerRot[3];//+0x;        // Yaw, Pitch (again, in radians.
+      float ForwardVelocityMultiplier;
+      float HorizontalVelocityMultiplier;
+      float RateOfFireVelocityMultiplier;
+      short HeldWeaponIndex;
+      short GrenadeIndex;
+      BYTE Unknown16[4];
+      float LookVect[3];
+      BYTE Unknown17[16];
+      float m_World_delay[3];  // Oddly enough... it matches the world vect, but seems to lag behind (Possibly what the client reports is _its_ world coord?)
+      BYTE Unknown18[128];
    };
 
    //the STATIC_PLAYER_HEADER is pretty much the same as the OBJECT_TABLE_HEADER

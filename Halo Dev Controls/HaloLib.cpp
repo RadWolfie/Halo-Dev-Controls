@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    HaloLib.cpp
-	Project: Halo Dev Controls and HDC
-	Author:  Jesus7Freak, RadWolfie
-	Date:    11/30/2016
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    HaloLib.cpp
+    Project: Halo Dev Controls and HDC
+    Author:  Jesus7Freak, RadWolfie
+    Date:    11/30/2016
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #include "HaloLib.h"
 

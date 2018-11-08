@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    WinMain.cpp
-	Project: Halo Dev Controls
-	Author:  Jesus7Freak
-	Date:    11/22/2011
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    WinMain.cpp
+    Project: Halo Dev Controls
+    Author:  Jesus7Freak
+    Date:    11/22/2011
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #include "WinMain.h"
 
@@ -217,14 +217,14 @@ BOOL InitApp()
 
    INITCOMMONCONTROLSEX InitCtrlEx;
    InitCtrlEx.dwSize = sizeof(INITCOMMONCONTROLSEX);
-	InitCtrlEx.dwICC  = ICC_STANDARD_CLASSES;
+   InitCtrlEx.dwICC  = ICC_STANDARD_CLASSES;
    InitCommonControlsEx(&InitCtrlEx); /* In case we use a common control */
 
    CMDsLib::GetSKeysFromFile(Settings_File_Name);
 
    //see if dll is in same folder
-	HANDLE hFile;
-	if ((hFile = CreateFileW(
+   HANDLE hFile;
+   if ((hFile = CreateFileW(
       Dll_Name,
       GENERIC_READ,
       FILE_SHARE_READ,
@@ -232,25 +232,25 @@ BOOL InitApp()
       OPEN_EXISTING,
       FILE_ATTRIBUTE_NORMAL,
       NULL)) == INVALID_HANDLE_VALUE)
-	{
-	   int dll_name_length = 0; do dll_name_length++; while(Dll_Name[dll_name_length]);
-	   wchar_t *caption = new wchar_t[0xB + dll_name_length]();
-   	
-	   for (int i = 0; i < dll_name_length; i++)
-	      caption[i] = Dll_Name[i];
-   	
-	   caption[dll_name_length + 0] = L' ';
-	   caption[dll_name_length + 1] = L'n';
-	   caption[dll_name_length + 2] = L'o';
-	   caption[dll_name_length + 3] = L't';
-	   caption[dll_name_length + 4] = L' ';
-	   caption[dll_name_length + 5] = L'f';
-	   caption[dll_name_length + 6] = L'o';
-	   caption[dll_name_length + 7] = L'u';
-	   caption[dll_name_length + 8] = L'n';
-	   caption[dll_name_length + 9] = L'd';
-	
-	   ::MessageBoxW(
+   {
+      int dll_name_length = 0; do dll_name_length++; while(Dll_Name[dll_name_length]);
+      wchar_t *caption = new wchar_t[0xB + dll_name_length]();
+
+      for (int i = 0; i < dll_name_length; i++)
+         caption[i] = Dll_Name[i];
+
+      caption[dll_name_length + 0] = L' ';
+      caption[dll_name_length + 1] = L'n';
+      caption[dll_name_length + 2] = L'o';
+      caption[dll_name_length + 3] = L't';
+      caption[dll_name_length + 4] = L' ';
+      caption[dll_name_length + 5] = L'f';
+      caption[dll_name_length + 6] = L'o';
+      caption[dll_name_length + 7] = L'u';
+      caption[dll_name_length + 8] = L'n';
+      caption[dll_name_length + 9] = L'd';
+
+      ::MessageBoxW(
          NULL,
          L"Commands and key-shortcuts will not work\nNeeds to be in the same folder\nas Halo Dev Controls",
          caption,
@@ -386,7 +386,7 @@ int OnCreate(HWND hwnd, LPCREATESTRUCT WinData)
       WinData->hInstance,
       NULL
    );
-	
+
    ExtrasMenu = CreatePopupMenu();
 
    /*MENUITEMINFO extras;
@@ -841,7 +841,7 @@ void OnPaint(HWND hwnd)
 void OnDrawItem(HWND hwnd, const DRAWITEMSTRUCT *lpDrawItem)
 {
    UINT iState = lpDrawItem->itemState;
-   BOOL bIsPressed =	(iState & ODS_SELECTED);
+   BOOL bIsPressed  = (iState & ODS_SELECTED);
    BOOL bIsFocused  = (iState & ODS_FOCUS);
    BOOL bIsDisabled = (iState & ODS_DISABLED);
    //BOOL bIsMouseOver = (lpDrawItem->itemState & ODS_HOTLIGHT);
@@ -924,11 +924,11 @@ void OnDrawItem(HWND hwnd, const DRAWITEMSTRUCT *lpDrawItem)
    DeleteObject(brBackground);
 
    int pnWidthEx = 0;
-	if (bIsFocused) pnWidthEx++;
-	
-	if (bDrawOutLine)
-	{
-	   HPEN pnForeColor = CreatePen(PS_SOLID, 1 + pnWidthEx, forecolor);
+   if (bIsFocused) pnWidthEx++;
+
+   if (bDrawOutLine)
+   {
+      HPEN pnForeColor = CreatePen(PS_SOLID, 1 + pnWidthEx, forecolor);
       SelectObject(hdc, pnForeColor);
       Rectangle(hdc, lpDrawItem->rcItem.left + pnWidthEx, lpDrawItem->rcItem.top + pnWidthEx, lpDrawItem->rcItem.right, lpDrawItem->rcItem.bottom);
       DeleteObject(pnForeColor);

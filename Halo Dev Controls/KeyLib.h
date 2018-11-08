@@ -1,5 +1,5 @@
 /********************************************************************************
-	 -- Halo Dev Controls
+    -- Halo Dev Controls
     Copyright © 2011 Jesus7Freak
 
     This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************
-	File:    KeyLib.h
-	Project: Halo Dev Controls
-	Author:  Jesus7Freak
-	Date:    11/22/2011
-	Game:    Halo and Halo Custom Edition
-	Version: all
+    File:    KeyLib.h
+    Project: Halo Dev Controls
+    Author:  Jesus7Freak
+    Date:    11/22/2011
+    Game:    Halo and Halo Custom Edition
+    Version: all
 *********************************************************************************/
 #pragma once
 
