@@ -803,7 +803,7 @@ namespace CMDsLib
       {//28
          L"Say",//sv_say
          L"/say [pExpression] <string>",
-         L"Sends a meesage to a specific player."
+         L"Sends a message to a specific player."
       },
       {//29
          L"Object Scale",//object_set_scale
