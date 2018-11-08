@@ -155,9 +155,9 @@ BOOL AboutOnInitDialog(HWND hDlg, HWND hCtrl, LPARAM init_data)
    SetWindowFont(GetDlgItem(hDlg, IDC_ABOUT_AUTHOR), h13Font, TRUE);
    
    HRSRC hVersion = FindResourceW(
-      (HMODULE)init_data, 
-      MAKEINTRESOURCEW(VS_VERSION_INFO), 
-      MAKEINTRESOURCEW(RT_VERSION));
+      (HMODULE)init_data,
+      MAKEINTRESOURCEW(VS_VERSION_INFO),
+      RT_VERSION); // RT_VERSION macro is using MAKEINTRESOURCE macro
    
    if (hVersion)
    {

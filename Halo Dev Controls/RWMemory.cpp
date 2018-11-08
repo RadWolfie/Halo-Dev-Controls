@@ -611,7 +611,7 @@ namespace ReadWriteMemoryTools
       }
       else
       {
-         func_index = (WORD)(lpProcName - IED.Base);
+         func_index = (WORD)((DWORD)lpProcName - IED.Base);
          found = true;
       }
          
